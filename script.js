@@ -20,7 +20,7 @@ const frameRate = 144.0;
 const frameDelay = 1000.0 / frameRate;
 
 var fireworksActive = [];
-var particles = [];
+var sparkles = [];
 
 /**
  * Bind event listeners
@@ -40,26 +40,24 @@ canvas.addEventListener("mousedown", function (event) {
  * Class definitions
  * =================
  */
-class Particle {
+class Sparkle {
 
     constructor(speed, gravity) {
 
-        //cordinate of the particle obj itself
+        //cordinate of the sparkle obj itself
         this.x = 0;
         this.x = 0;
 
         this.vectorX = 0;
         this.vectorY = 0;
 
-        this.scale = 0.8;
+        this.scale = 0.9;
 
         this.color = "#FFFFFF";
-        this.brightness = 1;
+        this.brightness = 1.75;
 
         this.speed = speed;
         this.gravity = gravity;
-
-        this.secLived = 0;
 
     }
 
@@ -67,33 +65,21 @@ class Particle {
 
         let animationSpeed = ms / 1000;
 
-        /*
-        if (this.secLived > 750 / ms) {
-            this.brightness -= 0.05;
-        }
-        else {
-            this.speed *= this.scale;
-            this.x -= this.vectorX * this.speed * animationSpeed;
-            this.y -= this.vectorY * this.speed * animationSpeed - this.gravity;
-        }
-        */
-        this.brightness -= 0.05;
+        this.brightness -= 0.04;
         this.speed *= this.scale;
         this.x -= this.vectorX * this.speed * animationSpeed;
         this.y -= this.vectorY * this.speed * animationSpeed - this.gravity;
-
-        this.secLived++;
 
     }
 
     render() {
         ctx.save();
         ctx.globalAlpha = this.brightness;
-        ctx.fillStyle = "#FFFFFF";
-        ctx.strokeStyle = "#FFFFFF";
+        ctx.fillStyle = this.color;
+        ctx.strokeStyle = this.color;
 
         ctx.beginPath();
-        ctx.arc(this.x, this.y, 1.5, 0, 2 * Math.PI);
+        ctx.arc(this.x, this.y, 2, 0, 2 * Math.PI);
         ctx.fill();
 
         ctx.closePath();
@@ -132,7 +118,7 @@ class Firework {
         let animationSpeed = ms / 1000;
 
         if (this.secLived > 1500 / ms) {
-            createParticles(30, this.x, this.y, this.color);
+            createSparkles(30, this.x, this.y, this.color);
             this.alive = false;
         }
         else {
@@ -182,21 +168,21 @@ function createFirework(xCord, yCord) {
     fireworksActive.push(firework);
 }
 
-function createParticles(count, xCord, yCord, color) {
-    let particle = undefined, angle = 0;
+function createSparkles(count, xCord, yCord, color) {
+    let sparkle = undefined, angle = 0;
     for (var i = 0; i < count; i++) {
-        particle = new Particle(random(1500, 2500), 0.5);
+        sparkle = new Sparkle(random(2000, 3000), 0.9);
 
-        particle.color = color;
-        particle.x = xCord;
-        particle.y = yCord;
+        sparkle.color = color;
+        sparkle.x = xCord;
+        sparkle.y = yCord;
 
         angle = random(0, 360);
 
-        particle.vectorX = Math.cos(angle * Math.PI / 180.0);
-        particle.vectorY = Math.sin(angle * Math.PI / 180.0);
+        sparkle.vectorX = Math.cos(angle * Math.PI / 180.0);
+        sparkle.vectorY = Math.sin(angle * Math.PI / 180.0);
 
-        particles.push(particle);
+        sparkles.push(sparkle);
     }
 }
 
@@ -217,14 +203,15 @@ function update(frame) {
         }
     }
 
-    for (var i = 0; i < particles.length; i++) {
+    for (var i = 0; i < sparkles.length; i++) {
         //detect if the firework is still alive
-        if (particles[i].brightness <= 0) {
-            particles.splice(i, 1);
+        if (sparkles[i].brightness <= 0) {
+            sparkles.splice(i, 1);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
         else {
-            particles[i].update(frame);
-            particles[i].render();
+            sparkles[i].update(frame);
+            sparkles[i].render();
         }
     }
 }

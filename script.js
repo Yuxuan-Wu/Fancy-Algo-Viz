@@ -34,6 +34,11 @@ const gravitySlide = document.querySelector("#gravity-slide");
 const enduranceSlide = document.querySelector("#endurance-slide");
 const particleCountSlide = document.querySelector("#particle-count-slide");
 
+//Physics variables
+var PHYSICS = {
+    gravity: gravitySlide.value,
+};
+
 /**
  * Bind event listeners
  * ====================
@@ -50,13 +55,17 @@ fullautoButton.addEventListener("click" , function() {
     fullautoButton.value ^= true;
 });
 
+gravitySlide.addEventListener("change", function() {
+    PHYSICS.gravity = gravitySlide.value;
+});
+
 /**
  * Class definitions
  * =================
  */
 class Sparkle {
 
-    constructor(speed, gravity) {
+    constructor(speed) {
 
         //cordinate of the sparkle obj itself
         this.x = 0;
@@ -71,7 +80,6 @@ class Sparkle {
         this.brightness = enduranceSlide.value;
 
         this.speed = speed;
-        this.gravity = gravity;
 
     }
 
@@ -82,7 +90,7 @@ class Sparkle {
         this.brightness -= 0.04;
         this.speed *= 0.9;
         this.x -= this.vectorX * this.speed * animationSpeed;
-        this.y -= this.vectorY * this.speed * animationSpeed - this.gravity;
+        this.y -= this.vectorY * this.speed * animationSpeed - PHYSICS.gravity;
 
     }
 
@@ -107,7 +115,7 @@ class Sparkle {
 
 class Firework {
 
-    constructor(speed, gravity) {
+    constructor(speed) {
 
         //cordinate of the firework obj itself
         this.x = 0;
@@ -123,7 +131,6 @@ class Firework {
         this.color = "#FFFFFF";
 
         this.speed = speed;
-        this.gravity = gravity;
 
         this.alive = true;
         this.secLived = 0;
@@ -141,7 +148,7 @@ class Firework {
         else {
             this.speed *= 0.98;
             this.x -= this.vectorX * this.speed * animationSpeed;
-            this.y -= this.vectorY * this.speed * animationSpeed - this.gravity;
+            this.y -= this.vectorY * this.speed * animationSpeed - PHYSICS.gravity / 3;
         }
 
         this.secLived++;
@@ -165,22 +172,21 @@ class Firework {
  */
 
 function createFirework(xCord, yCord, color) {
-    let firework = new Firework(random(1750, 2500), gravitySlide.value / 2);
+    let firework = new Firework(random(1750, 2500));
 
     firework.x = windowWidth / 2;
-    firework.startX = windowWidth / 2;
     firework.y = windowHeight;
-    firework.startY = windowHeight;
 
-    firework.color = color;
-
+    firework.startX = firework.x;
+    firework.startY = firework.y;
     firework.targetX = xCord;
     firework.targetY = yCord;
 
-    let angle = getAngle(firework.startX, firework.startY, firework.targetX, firework.targetY);
-
+    let angle = getAngle(firework.targetX, firework.targetY, firework.startX, firework.startY);
     firework.vectorX = Math.cos(angle * Math.PI / 180.0);
     firework.vectorY = Math.sin(angle * Math.PI / 180.0);
+
+    firework.color = color;
 
     fireworksActive.push(firework);
 }
@@ -188,16 +194,16 @@ function createFirework(xCord, yCord, color) {
 function createSparkles(count, xCord, yCord, color) {
     let sparkle = undefined, angle = 0;
     for (var i = 0; i < count; i++) {
-        sparkle = new Sparkle(random(1500, 3000), gravitySlide.value);
+        sparkle = new Sparkle(random(1500, 3000));
 
-        sparkle.color = color;
         sparkle.x = xCord;
         sparkle.y = yCord;
 
         angle = random(0, 360);
-
         sparkle.vectorX = Math.cos(angle * Math.PI / 180.0);
         sparkle.vectorY = Math.sin(angle * Math.PI / 180.0);
+
+        sparkle.color = color;
 
         sparkles.push(sparkle);
     }
@@ -240,10 +246,14 @@ function update(frame) {
     }
 }
 
-//The main rendering process
-const main = setInterval(function () {
+/*
+//The main rendering process for firework sim
+const firework_sim = setInterval(function () {
     update(frameDelay);
 }, frameDelay);
+*/
+
+//clearInterval(main);
 
 /**
  * Auxiliary functions
@@ -251,8 +261,8 @@ const main = setInterval(function () {
  */
 
 function distance(x1, y1, x2, y2) {
-    disX = x1 - x2;
-    disY = y1 - y2;
+    let disX = x1 - x2;
+    let disY = y1 - y2;
 
     return Math.sqrt(disX * disX + disY * disY);
 }
@@ -265,19 +275,6 @@ function randomRGB() {
     return "#" + random(0, 16777215).toString(16);
 }
 
-function getAngle(posx1, posy1, posx2, posy2) {
-    if (posx1 == posx2) { if (posy1 > posy2) { return 90; } else { return 270; } }
-    if (posy1 == posy2) { if (posy1 > posy2) { return 0; } else { return 180; } }
-
-    var xDist = posx1 - posx2;
-    var yDist = posy1 - posy2;
-
-    if (xDist == yDist) { if (posx1 < posx2) { return 225; } else { return 45; } }
-    if (-xDist == yDist) { if (posx1 < posx2) { return 135; } else { return 315; } }
-
-    if (posx1 < posx2) {
-        return Math.atan2(posy2 - posy1, posx2 - posx1) * (180 / Math.PI) + 180;
-    } else {
-        return Math.atan2(posy2 - posy1, posx2 - posx1) * (180 / Math.PI) + 180;
-    }
+function getAngle(x1, y1, x2, y2) {
+    return Math.atan2( y2 - y1, x2 - x1 ) * ( 180 / Math.PI );
 }

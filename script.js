@@ -22,6 +22,18 @@ const frameDelay = 1000.0 / frameRate;
 var fireworksActive = [];
 var sparkles = [];
 
+//fullauto control
+const threshold = 200;
+var timer = 0;
+
+//Control panel
+const fullautoButton = document.querySelector("#fullauto-button");
+const colorPicker = document.querySelector("#color-picker");
+const scaleSlide = document.querySelector("#scale-slide");
+const gravitySlide = document.querySelector("#gravity-slide");
+const enduranceSlide = document.querySelector("#endurance-slide");
+const particleCountSlide = document.querySelector("#particle-count-slide");
+
 /**
  * Bind event listeners
  * ====================
@@ -30,10 +42,12 @@ canvas.addEventListener("mousedown", function (event) {
     var button = event.which;
     //1 for left click, 2 for right click
     if (button == 1) {
-        createFirework(event.clientX, event.clientY);
-    } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        createFirework(event.clientX, event.clientY, colorPicker.value);
     }
+});
+
+fullautoButton.addEventListener("click" , function() {
+    fullautoButton.value ^= true;
 });
 
 /**
@@ -51,10 +65,10 @@ class Sparkle {
         this.vectorX = 0;
         this.vectorY = 0;
 
-        this.scale = 0.9;
+        this.scale = scaleSlide.value;
 
         this.color = "#FFFFFF";
-        this.brightness = 1.75;
+        this.brightness = enduranceSlide.value;
 
         this.speed = speed;
         this.gravity = gravity;
@@ -66,24 +80,27 @@ class Sparkle {
         let animationSpeed = ms / 1000;
 
         this.brightness -= 0.04;
-        this.speed *= this.scale;
+        this.speed *= 0.9;
         this.x -= this.vectorX * this.speed * animationSpeed;
         this.y -= this.vectorY * this.speed * animationSpeed - this.gravity;
 
     }
 
     render() {
+
         ctx.save();
         ctx.globalAlpha = this.brightness;
         ctx.fillStyle = this.color;
         ctx.strokeStyle = this.color;
 
+        ctx.translate(this.x, this.y);
+		ctx.scale(this.scale, this.scale);
         ctx.beginPath();
-        ctx.arc(this.x, this.y, 2, 0, 2 * Math.PI);
-        ctx.fill();
+        ctx.fillRect(0, 0, 1, 1);
 
         ctx.closePath();
         ctx.restore();
+
     }
 
 }
@@ -118,7 +135,7 @@ class Firework {
         let animationSpeed = ms / 1000;
 
         if (this.secLived > 1500 / ms) {
-            createSparkles(30, this.x, this.y, this.color);
+            createSparkles(particleCountSlide.value, this.x, this.y, this.color);
             this.alive = false;
         }
         else {
@@ -147,15 +164,15 @@ class Firework {
  * ==============
  */
 
-function createFirework(xCord, yCord) {
-    let firework = new Firework(random(1500, 2500), 0.5);
+function createFirework(xCord, yCord, color) {
+    let firework = new Firework(random(1750, 2500), gravitySlide.value / 2);
 
     firework.x = windowWidth / 2;
     firework.startX = windowWidth / 2;
     firework.y = windowHeight;
     firework.startY = windowHeight;
 
-    firework.color = "#FFFFFF";
+    firework.color = color;
 
     firework.targetX = xCord;
     firework.targetY = yCord;
@@ -171,7 +188,7 @@ function createFirework(xCord, yCord) {
 function createSparkles(count, xCord, yCord, color) {
     let sparkle = undefined, angle = 0;
     for (var i = 0; i < count; i++) {
-        sparkle = new Sparkle(random(2000, 3000), 0.9);
+        sparkle = new Sparkle(random(1500, 3000), gravitySlide.value);
 
         sparkle.color = color;
         sparkle.x = xCord;
@@ -187,10 +204,17 @@ function createSparkles(count, xCord, yCord, color) {
 }
 
 function update(frame) {
+    timer++;
+
     //Every frame fill the whole screen with black color to hide the firework trails
     ctx.globalAlpha = 1;
     ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
     ctx.fillRect(0, 0, windowWidth, windowHeight);
+
+    if (fullautoButton.value == true && timer % threshold == 0) {
+        createFirework(random(windowWidth / 3, (windowWidth * 2) / 3), 
+            windowHeight / 2, randomRGB());
+    }
 
     for (var i = 0; i < fireworksActive.length; i++) {
         //detect if the firework is still alive
@@ -235,6 +259,10 @@ function distance(x1, y1, x2, y2) {
 
 function random(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
+}
+
+function randomRGB() {
+    return "#" + random(0, 16777215).toString(16);
 }
 
 function getAngle(posx1, posy1, posx2, posy2) {

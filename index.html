@@ -4,12 +4,25 @@
     
     <head>
         <title>Fancy Algo Viz</title>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
+
+        <style>
+            body { 
+                margin: 0%; 
+                background: black;
+            }
+            canvas { 
+                position: absolute; 
+                display: block; 
+                z-index: 10; 
+            }
+        </style>
+
+        <script defer src="./script.js"></script>
     </head>
 
     <body>
-        <p>
-            Hello World!
-        </p>
+        <canvas id="canvas"> This project can only run if Canvas is supported and Javascript is enabled </canvas>
     </body>
 
 </html>

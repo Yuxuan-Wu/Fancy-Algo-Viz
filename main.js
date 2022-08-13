@@ -67,4 +67,5 @@ function ceaseCurrentProcess() {
 }
 
 //TODO
-//Control panel, 
+//Separate pull down menu
+//tutorial

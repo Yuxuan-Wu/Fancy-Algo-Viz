@@ -190,15 +190,11 @@ function createSparkles(count, xCord, yCord, color) {
 export function update(frame) {
     timer++;
 
-    //Every frame fill the whole screen with more transparent background color to hide the firework trails
     context.globalAlpha = 1;
-
-    //when there is no active firework / sparkles
-    context.fillStyle = 'rgba(38, 39, 41, 0.1)';
+    
+    //Every frame fill the whole screen to make ease transition for the firework trails
+    context.fillStyle = `rgba(38, 39, 41, ${ (timer / 500.0 + 0.01) % 1.0})`;
     context.fillRect(0, 0, windowWidth, windowHeight);
-
-    //Remove any remaining firework trails by filling the whole screen with opaque background color
-    //context.fillStyle = 'rgb(38, 39, 41)';
 
     if (fullautoButton.value == true && timer % fireThreshold == 0) {
         createFirework(random(windowWidth / 3, (windowWidth * 2) / 3),

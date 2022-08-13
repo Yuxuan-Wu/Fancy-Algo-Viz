@@ -46,6 +46,7 @@ homeBtn.addEventListener("click", function () {
 
 physicsSim.addEventListener("click", function() {
     ceaseCurrentProcess();
+
     currApp = setInterval(function () {
         fireworkUpdate(frameDelay);
     }, frameDelay);
@@ -56,5 +57,7 @@ physicsSim.addEventListener("click", function() {
  * ==================== 
  */
 function ceaseCurrentProcess() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
     clearInterval(currApp);
 }

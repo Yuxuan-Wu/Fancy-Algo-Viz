@@ -17,6 +17,7 @@ var currApp;
 const homeBtn = document.querySelector("#home");
 const backgroundMusic = document.querySelector("#background-music");
 const physicsSim = document.querySelector("#physicsSim");
+const navBar = document.querySelector("#navbar");
 
 /**
  * Canvas settings
@@ -25,11 +26,8 @@ const physicsSim = document.querySelector("#physicsSim");
 const canvas = document.querySelector("#canvas");
 export const context = canvas.getContext('2d');
 
-export var windowWidth = window.innerWidth;
-export var windowHeight = window.innerHeight;
-
-canvas.width = windowWidth;
-canvas.height = windowHeight;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 const frameRate = 144.0;
 const frameDelay = 1000.0 / frameRate;

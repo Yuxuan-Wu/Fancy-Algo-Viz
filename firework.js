@@ -1,7 +1,7 @@
 /**
  * Local imports
  */
-import { context, windowWidth, windowHeight } from "./main.js";
+import { context } from "./main.js";
 import { random, randomRGB, getAngle } from "./auxiliary.js";
 
 /**
@@ -152,8 +152,8 @@ class Firework {
 function createFirework(xCord, yCord, color) {
     let firework = new Firework(random(1750, 2500));
 
-    firework.x = windowWidth / 2;
-    firework.y = windowHeight;
+    firework.x = canvas.width / 2;
+    firework.y = canvas.height;
 
     firework.startX = firework.x;
     firework.startY = firework.y;
@@ -193,12 +193,12 @@ export function update(frame) {
     context.globalAlpha = 1;
     
     //Every frame fill the whole screen to make ease transition for the firework trails
-    context.fillStyle = `rgba(38, 39, 41, ${ (timer / 500.0 + 0.01) % 1.0})`;
-    context.fillRect(0, 0, windowWidth, windowHeight);
+    context.fillStyle = `rgba(38, 39, 41, ${ 0.15 + (timer / 500.0) % 0.45 })`;
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
     if (fullautoButton.value == true && timer % fireThreshold == 0) {
-        createFirework(random(windowWidth / 3, (windowWidth * 2) / 3),
-            windowHeight / 2, randomRGB());
+        createFirework(random(canvas.width / 3, (canvas.width * 2) / 3),
+            canvas.height / 2, randomRGB());
     }
 
     for (var i = 0; i < fireworksActive.length; i++) {

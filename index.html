@@ -4,7 +4,7 @@
 
 <head>
     <title>Fancy Algo Viz</title>
-    
+
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 
@@ -28,16 +28,19 @@
             background: var(--main-bg-color);
             position: absolute;
             display: block;
-            z-index: 10;
+            z-index: 9;
         }
 
         #navbar {
+            position: absolute;
             background-color: var(--nav-bar-color);
             overflow: hidden;
             list-style-type: none;
+            width: 100%;
             margin: 0%;
             padding: 0%;
             box-shadow: 0.1rem 0.1rem 0.3rem 0.01rem var(--shadow-color);
+            z-index: 10;
         }
 
         #navbar li {
@@ -63,6 +66,14 @@
             cursor: pointer;
             color: white;
         }
+
+        #firework-control-panel {
+            position: absolute;
+            margin: 0%;
+            padding: 0%;
+            z-index: 10;
+            display: none;
+        }
     </style>
 
     <script defer type="module" src="./main.js"></script>
@@ -78,12 +89,15 @@
         <li><button type="button" id="">TBD</button></li>
     </ul>
 
-    <button type="button" id="fullauto-button" value="0">Fullauto Mode</button>
-    <input type="color" id="color-picker" value="#FFFFFF">
-    <input type="range" id="scale-slide" step="0.1" min="1.0" max="5.0" value="2.0">
-    <input type="range" id="gravity-slide" step="0.05" min="0.4" max="2.0" value="0.9">
-    <input type="range" id="endurance-slide" step="0.05" min="1.0" max="3.0" value="1.75">
-    <input type="range" id="particle-count-slide" min="10" max="50" value="30">
+    <div id="firework-control-panel">
+        <button type="button" id="fullauto-button" value="0">Fullauto Mode</button>
+        <input type="color" id="color-picker" value="#FFFFFF">
+        <input type="range" id="scale-slide" step="0.1" min="1.0" max="5.0" value="2.0">
+        <input type="range" id="gravity-slide" step="0.05" min="0.4" max="2.0" value="0.9">
+        <input type="range" id="endurance-slide" step="0.05" min="1.0" max="3.0" value="1.75">
+        <input type="range" id="particle-count-slide" min="10" max="50" value="30">
+    </div>
+
     <canvas id="canvas"> This project can only run if Canvas is supported and Javascript is enabled </canvas>
 
     <audio id="background-music" src="./assests/music/ZoodDZ.mp3" loop />

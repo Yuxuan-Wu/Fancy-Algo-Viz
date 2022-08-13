@@ -24,19 +24,30 @@ const enduranceSlide = document.querySelector("#endurance-slide");
 const particleCountSlide = document.querySelector("#particle-count-slide");
 
 /**
- * Bind event listeners
- * ====================
+ * Event listeners and their controllers
+ * =====================================
  */
-canvas.addEventListener("mousedown", function (event) {
+function mousedownListener(event) {
     var button = event.which;
     //1 for left click, 2 for right click
     if (button == 1) {
         createFirework(event.clientX, event.clientY, colorPicker.value);
     }
-});
-fullautoButton.addEventListener("click", function () {
+}
+
+function fullautoButtonLisener() {
     fullautoButton.value ^= true;
-});
+}
+
+export function bindEventlisteners() {
+    canvas.addEventListener("mousedown", mousedownListener, true);
+    fullautoButton.addEventListener("click", fullautoButtonLisener, true);
+}
+
+export function removeEventlisteners() {
+    canvas.removeEventListener("mousedown", mousedownListener, true);
+    fullautoButton.removeEventListener("mousedown", fullautoButtonLisener, true);
+}
 
 /**
  * Class definitions
@@ -191,9 +202,9 @@ export function update(frame) {
     timer++;
 
     context.globalAlpha = 1;
-    
+
     //Every frame fill the whole screen to make ease transition for the firework trails
-    context.fillStyle = `rgba(38, 39, 41, ${ 0.15 + (timer / 500.0) % 0.45 })`;
+    context.fillStyle = `rgba(38, 39, 41, ${0.15 + (timer / 500.0) % 0.45})`;
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     if (fullautoButton.value == true && timer % fireThreshold == 0) {

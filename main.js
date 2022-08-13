@@ -2,7 +2,7 @@
  * Local imports
  * =============
  */
-import { update as fireworkUpdate } from './firework.js';
+import * as Firework from './firework.js';
 
 /**
  * Variable declaration and initialization
@@ -45,8 +45,13 @@ homeBtn.addEventListener("click", function () {
 physicsSim.addEventListener("click", function() {
     ceaseCurrentProcess();
 
+    Firework.bindEventlisteners();
+
+    //
+
+    //start the rendering process for firework
     currApp = setInterval(function () {
-        fireworkUpdate(frameDelay);
+        Firework.update(frameDelay);
     }, frameDelay);
 });
 
@@ -56,6 +61,9 @@ physicsSim.addEventListener("click", function() {
  */
 function ceaseCurrentProcess() {
     context.clearRect(0, 0, canvas.width, canvas.height);
+
+    //remove eventlisteners for all applications
+    Firework.removeEventlisteners();
 
     clearInterval(currApp);
 }

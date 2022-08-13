@@ -13,10 +13,56 @@
             --main-bg-color: rgb(38, 39, 41);
             --nav-bar-color: rgb(21, 22, 24);
             --shadow-color: rgba(0, 0, 0, .5);
+
+            --generic-green: #4CAF50;
+            --generic-blue: #008CBA;
+            --generic-red: #f44336;
+            --generic-gray: #e7e7e7;
+            --generic-black: #555555;
         }
 
         * {
             -border: white solid thin;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            flex-basis: 100%;
+            flex: 1;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 75%;
+            height: 1.5rem;
+            border-radius: 1.5rem;
+            background: var(--generic-gray);
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: 200ms;
+            transition: opacity 200ms;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 1.5rem;
+            background: var(--generic-green);
+            cursor: pointer;
         }
 
         body {
@@ -29,6 +75,11 @@
             position: absolute;
             display: block;
             z-index: 9;
+        }
+
+        label,
+        button {
+            font-family: 'Trebuchet MS';
         }
 
         #navbar {
@@ -70,10 +121,42 @@
         #firework-control-panel {
             position: absolute;
             bottom: 0%;
-            margin: 0%;
+            margin: 0.5rem;
             padding: 0%;
             z-index: 10;
             display: none;
+        }
+
+        #firework-control-panel div {
+            margin: 1rem;
+        }
+
+        #firework-control-panel div>* {
+            margin-right: 1rem;
+            color: white;
+        }
+
+        #fullauto-button {
+            background-color: var(--generic-red);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.6rem;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
+            box-shadow: 0.2rem 0.2rem 0.5rem 0.02rem var(--shadow-color);
+            transition: 200ms;
+            transition-timing-function: ease-out;
+        }
+
+        #fullauto-button:hover {
+            background-color: #c51e12;
+            box-shadow: 0.1rem 0.1rem 0.1rem 0.01rem var(--shadow-color);
+        }
+
+        #color-picker {
+            outline: none;
         }
     </style>
 
@@ -90,13 +173,30 @@
         <li><button type="button" id="">TBD</button></li>
     </ul>
 
-    <div id="firework-control-panel">
-        <button type="button" id="fullauto-button" value="0">Fullauto Mode</button>
-        <input type="color" id="color-picker" value="#FFFFFF">
-        <input type="range" id="scale-slide" step="0.1" min="1.0" max="5.0" value="2.0">
-        <input type="range" id="gravity-slide" step="0.05" min="0.4" max="2.0" value="0.9">
-        <input type="range" id="endurance-slide" step="0.05" min="1.0" max="3.0" value="1.75">
-        <input type="range" id="particle-count-slide" min="10" max="50" value="30">
+    <div id="firework-control-panel" class="column">
+        <div class="row">
+            <button type="button" id="fullauto-button" value="0">Fullauto Mode</button>
+        </div>
+        <div class="row">
+            <label for="color-picker">Firework Color:</label>
+            <input type="color" id="color-picker" value="#FFFFFF">
+        </div>
+        <div class="row">
+            <label for="scale-slide">Particle Size:</label>
+            <input type="range" class="slider" id="scale-slide" step="0.1" min="1.0" max="5.0" value="2.0">
+        </div>
+        <div class="row">
+            <label for="gravity-slide">Gravity:</label>
+            <input type="range" class="slider" id="gravity-slide" step="0.05" min="0.4" max="2.0" value="0.9">
+        </div>
+        <div class="row">
+            <label for="endurance-slide">Sparkle Endurance:</label>
+            <input type="range" class="slider" id="endurance-slide" step="0.05" min="1.0" max="3.0" value="1.75">
+        </div>
+        <div class="row">
+            <label for="particle-count-slide">Particle Count:</label>
+            <input type="range" class="slider" id="particle-count-slide" min="10" max="50" value="30">
+        </div>
     </div>
 
     <canvas id="canvas"> This project can only run if Canvas is supported and Javascript is enabled </canvas>

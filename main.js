@@ -1,11 +1,6 @@
 /**
- * Page settings
+ * Canvas settings
  * =============
- */
-
-/**
- * Variable declaration and initialization
- * =======================================
  */
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext('2d');
@@ -19,11 +14,16 @@ canvas.height = windowHeight;
 const frameRate = 144.0;
 const frameDelay = 1000.0 / frameRate;
 
+/**
+ * Variable declaration and initialization
+ * =======================================
+ */
+
 var fireworksActive = [];
 var sparkles = [];
 
 //fullauto control
-const threshold = 200;
+const fireThreshold = 300;
 var timer = 0;
 
 //Control panel
@@ -33,11 +33,6 @@ const scaleSlide = document.querySelector("#scale-slide");
 const gravitySlide = document.querySelector("#gravity-slide");
 const enduranceSlide = document.querySelector("#endurance-slide");
 const particleCountSlide = document.querySelector("#particle-count-slide");
-
-//Physics variables
-var PHYSICS = {
-    gravity: gravitySlide.value,
-};
 
 /**
  * Bind event listeners
@@ -51,12 +46,8 @@ canvas.addEventListener("mousedown", function (event) {
     }
 });
 
-fullautoButton.addEventListener("click" , function() {
+fullautoButton.addEventListener("click", function () {
     fullautoButton.value ^= true;
-});
-
-gravitySlide.addEventListener("change", function() {
-    PHYSICS.gravity = gravitySlide.value;
 });
 
 /**
@@ -90,7 +81,7 @@ class Sparkle {
         this.brightness -= 0.04;
         this.speed *= 0.9;
         this.x -= this.vectorX * this.speed * animationSpeed;
-        this.y -= this.vectorY * this.speed * animationSpeed - PHYSICS.gravity;
+        this.y -= this.vectorY * this.speed * animationSpeed - gravitySlide.value;
 
     }
 
@@ -102,7 +93,7 @@ class Sparkle {
         ctx.strokeStyle = this.color;
 
         ctx.translate(this.x, this.y);
-		ctx.scale(this.scale, this.scale);
+        ctx.scale(this.scale, this.scale);
         ctx.beginPath();
         ctx.fillRect(0, 0, 1, 1);
 
@@ -148,7 +139,7 @@ class Firework {
         else {
             this.speed *= 0.98;
             this.x -= this.vectorX * this.speed * animationSpeed;
-            this.y -= this.vectorY * this.speed * animationSpeed - PHYSICS.gravity / 3;
+            this.y -= this.vectorY * this.speed * animationSpeed - gravitySlide.value / 3;
         }
 
         this.secLived++;
@@ -212,13 +203,13 @@ function createSparkles(count, xCord, yCord, color) {
 function update(frame) {
     timer++;
 
-    //Every frame fill the whole screen with black color to hide the firework trails
+    //Every frame fill the whole screen with more transparent background color to hide the firework trails
     ctx.globalAlpha = 1;
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+    ctx.fillStyle = 'rgba(38, 39, 41, 0.15)';
     ctx.fillRect(0, 0, windowWidth, windowHeight);
 
-    if (fullautoButton.value == true && timer % threshold == 0) {
-        createFirework(random(windowWidth / 3, (windowWidth * 2) / 3), 
+    if (fullautoButton.value == true && timer % fireThreshold == 0) {
+        createFirework(random(windowWidth / 3, (windowWidth * 2) / 3),
             windowHeight / 2, randomRGB());
     }
 
@@ -237,21 +228,25 @@ function update(frame) {
         //detect if the firework is still alive
         if (sparkles[i].brightness <= 0) {
             sparkles.splice(i, 1);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
         else {
             sparkles[i].update(frame);
             sparkles[i].render();
         }
     }
+
+    //when there is no active firework / sparkles
+    if (sparkles.length == 0 && fireworksActive.length == 0) {
+        //Remove any remaining firework trails by filling the whole screen with opaque background color
+        ctx.fillStyle = 'rgb(38, 39, 41)';
+        ctx.fillRect(0, 0, windowWidth, windowHeight);
+    }
 }
 
-/*
 //The main rendering process for firework sim
 const firework_sim = setInterval(function () {
     update(frameDelay);
 }, frameDelay);
-*/
 
 //clearInterval(main);
 
@@ -276,5 +271,5 @@ function randomRGB() {
 }
 
 function getAngle(x1, y1, x2, y2) {
-    return Math.atan2( y2 - y1, x2 - x1 ) * ( 180 / Math.PI );
+    return Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
 }

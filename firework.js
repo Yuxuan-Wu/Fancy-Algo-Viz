@@ -10,12 +10,17 @@ import { random, randomRGB, getAngle } from "./auxiliary.js";
  */
 var fireworksActive = [];
 var sparkles = [];
+var MOUSE = {
+    xCord: undefined,
+    yCord: undefined,
+};
 
 //fullauto control
-const fireThreshold = 300;
+const fireThreshold = 10;
 var timer = 0;
 
 //Control panel
+const controlPanel = document.querySelector("#firework-control-panel");
 const fullautoButton = document.querySelector("#fullauto-button");
 const colorPicker = document.querySelector("#color-picker");
 const scaleSlide = document.querySelector("#scale-slide");
@@ -35,17 +40,28 @@ function mousedownListener(event) {
     }
 }
 
+function mousemoveListener(event) {
+    MOUSE.xCord = event.clientX;
+    MOUSE.yCord = event.clientY;
+}
+
 function fullautoButtonLisener() {
     fullautoButton.value ^= true;
 }
 
 export function bindEventlisteners() {
+    controlPanel.style.display = "initial";
+
     canvas.addEventListener("mousedown", mousedownListener, true);
+    canvas.addEventListener("mousemove", mousemoveListener, true);
     fullautoButton.addEventListener("click", fullautoButtonLisener, true);
 }
 
 export function removeEventlisteners() {
+    controlPanel.style.display = "none";
+
     canvas.removeEventListener("mousedown", mousedownListener, true);
+    canvas.removeEventListener("mousemove", mousemoveListener, true);
     fullautoButton.removeEventListener("mousedown", fullautoButtonLisener, true);
 }
 
@@ -208,8 +224,7 @@ export function update(frame) {
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     if (fullautoButton.value == true && timer % fireThreshold == 0) {
-        createFirework(random(canvas.width / 3, (canvas.width * 2) / 3),
-            canvas.height / 2, randomRGB());
+        createFirework(MOUSE.xCord, MOUSE.yCord, randomRGB());
     }
 
     for (var i = 0; i < fireworksActive.length; i++) {

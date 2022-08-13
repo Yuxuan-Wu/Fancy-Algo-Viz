@@ -47,8 +47,6 @@ physicsSim.addEventListener("click", function() {
 
     Firework.bindEventlisteners();
 
-    //
-
     //start the rendering process for firework
     currApp = setInterval(function () {
         Firework.update(frameDelay);
@@ -67,3 +65,6 @@ function ceaseCurrentProcess() {
 
     clearInterval(currApp);
 }
+
+//TODO
+//Control panel, 

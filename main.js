@@ -2,7 +2,8 @@
  * Local imports
  * =============
  */
-import * as Firework from './firework.js';
+import * as Firework from "./firework.js";
+import * as NodeViz from "./nodeViz.js";
 
 /**
  * Variable declaration and initialization
@@ -42,7 +43,7 @@ homeBtn.addEventListener("click", function () {
     ceaseCurrentProcess();
 });
 
-physicsSim.addEventListener("click", function() {
+physicsSim.addEventListener("click", function () {
     ceaseCurrentProcess();
 
     Firework.bindEventlisteners();
@@ -64,8 +65,19 @@ function ceaseCurrentProcess() {
     Firework.removeEventlisteners();
 
     clearInterval(currApp);
+    window.cancelAnimationFrame(currApp);
 }
 
 //TODO
 //Separate pull down menu
 //tutorial
+
+//First data structure: linked list
+//functions: prepend, append, delete(curr), get curr, pointer indication (highlight the node), change value for a curr, next 
+
+NodeViz.createNode(200, 400, 1);
+NodeViz.createNode(300, 400, 2);
+
+//NodeViz.bindEventlisteners();
+
+//NodeViz.animate();

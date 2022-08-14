@@ -1,5 +1,6 @@
 /**
  * Local imports
+ * =============
  */
 import { context } from "./main.js";
 import { random, randomRGB, getAngle } from "./auxiliary.js";
@@ -75,7 +76,7 @@ class Sparkle {
 
         //cordinate of the sparkle obj itself
         this.x = 0;
-        this.x = 0;
+        this.y = 0;
 
         this.vectorX = 0;
         this.vectorY = 0;
@@ -188,8 +189,8 @@ function createFirework(xCord, yCord, color) {
     firework.targetY = yCord;
 
     let angle = getAngle(firework.targetX, firework.targetY, firework.startX, firework.startY);
-    firework.vectorX = Math.cos(angle * Math.PI / 180.0);
-    firework.vectorY = Math.sin(angle * Math.PI / 180.0);
+    firework.vectorX = Math.cos(angle);
+    firework.vectorY = Math.sin(angle);
 
     firework.color = color;
 

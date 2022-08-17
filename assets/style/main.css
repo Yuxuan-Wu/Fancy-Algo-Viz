@@ -6,7 +6,7 @@
     --generic-green: #4CAF50;
     --generic-blue: #008CBA;
     --generic-red: #f44336;
-    --generic-gray: #e7e7e7;
+    --generic-gray: #cccccc;
     --generic-black: #555555;
 }
 
@@ -56,13 +56,14 @@
 
 body {
     margin: 0%;
+    height: 100%;
     background: var(--main-bg-color);
 }
 
 canvas {
     background: var(--main-bg-color);
-    position: absolute;
-    display: block;
+    position: relative;
+    display: none;
     z-index: 9;
 }
 
@@ -72,7 +73,8 @@ button {
 }
 
 #navbar {
-    position: absolute;
+    position: relative;
+    display: block;
     background-color: var(--nav-bar-color);
     overflow: hidden;
     list-style-type: none;
@@ -146,4 +148,25 @@ button {
 
 #color-picker {
     outline: none;
+}
+
+#grid-board {
+    --cols: 25;
+    --rows: 25;
+    background-color: black;
+    border-radius: 0.2rem;
+    position: relative;
+
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    grid-template-rows: repeat(var(--rows), 1fr);
+    gap: 0.25rem;
+    padding: 0.3rem;
+    z-index: 9;
+}
+
+.grid-box {
+    background-color: var(--generic-gray);
+    border-radius: 0.2rem;
+    z-index: 10;
 }

@@ -3,7 +3,7 @@
  * =============
  */
 import * as Firework from "./firework.js";
-import * as NodeViz from "./nodeViz.js";
+//import * as NodeViz from "./nodeViz.js";
 
 /**
  * Variable declaration and initialization
@@ -28,7 +28,7 @@ const canvas = document.querySelector("#canvas");
 export const context = canvas.getContext('2d');
 
 canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.height = window.innerHeight - navBar.offsetHeight;
 
 const frameRate = 144.0;
 const frameDelay = 1000.0 / frameRate;
@@ -38,7 +38,7 @@ const frameDelay = 1000.0 / frameRate;
  * ====================
  */
 homeBtn.addEventListener("click", function () {
-    //backgroundMusic.play();
+    backgroundMusic.play();
 
     ceaseCurrentProcess();
 });
@@ -46,6 +46,7 @@ homeBtn.addEventListener("click", function () {
 physicsSim.addEventListener("click", function () {
     ceaseCurrentProcess();
 
+    canvas.style.display = "block";
     Firework.bindEventlisteners();
 
     //start the rendering process for firework
@@ -61,6 +62,7 @@ physicsSim.addEventListener("click", function () {
 function ceaseCurrentProcess() {
     context.clearRect(0, 0, canvas.width, canvas.height);
 
+    canvas.style.display = "none";
     //remove eventlisteners for all applications
     Firework.removeEventlisteners();
 
@@ -75,9 +77,36 @@ function ceaseCurrentProcess() {
 //First data structure: linked list
 //functions: prepend, append, delete(curr), get curr, pointer indication (highlight the node), change value for a curr, next 
 
-NodeViz.createNode(200, 400, 1);
-NodeViz.createNode(300, 400, 2);
+//NodeViz.createNode(200, 400, 1);
+//NodeViz.createNode(300, 400, 2);
 
 //NodeViz.bindEventlisteners();
 
 //NodeViz.animate();
+
+const gridBoard = document.querySelector("#grid-board");
+
+//set the size of gridBoard According to the user's screen size
+var boardWidth = window.innerWidth;
+gridBoard.style.width = boardWidth;
+var boardHeight = window.innerHeight - navBar.offsetHeight - 10;
+gridBoard.style.height = `${boardHeight}px`;
+
+
+var gridBox;
+function populateGrid() {
+    //set the grid's size  adaptively to the user's screen
+    let rows = Math.floor(boardHeight / 30); 
+    let cols = Math.floor(boardWidth / 30); 
+    gridBoard.style.setProperty("--rows", rows);
+    gridBoard.style.setProperty("--cols", cols);
+
+    for (let i = 0; i < rows * cols; i++) {
+        gridBox = document.createElement("div");
+        gridBox.classList.add("grid-box");
+        gridBox.value = 1;
+        gridBoard.appendChild(gridBox);
+    }
+}
+
+populateGrid();

@@ -84,16 +84,22 @@ function ceaseCurrentProcess() {
 
 //NodeViz.animate();
 
+
+/**
+ * Variable declaration and initialization
+ * =======================================
+ */
 const gridBoard = document.querySelector("#grid-board");
+var boardWidth = window.innerWidth;
+var boardHeight = window.innerHeight - navBar.offsetHeight - 10;
+var boxes = [];
 
 //set the size of gridBoard According to the user's screen size
-var boardWidth = window.innerWidth;
 gridBoard.style.width = boardWidth;
-var boardHeight = window.innerHeight - navBar.offsetHeight - 10;
 gridBoard.style.height = `${boardHeight}px`;
 
 
-var gridBox;
+
 function populateGrid() {
     //set the grid's size  adaptively to the user's screen
     let rows = Math.floor(boardHeight / 30); 
@@ -101,12 +107,40 @@ function populateGrid() {
     gridBoard.style.setProperty("--rows", rows);
     gridBoard.style.setProperty("--cols", cols);
 
-    for (let i = 0; i < rows * cols; i++) {
-        gridBox = document.createElement("div");
-        gridBox.classList.add("grid-box");
-        gridBox.value = 1;
-        gridBoard.appendChild(gridBox);
+    let boxGroup = [];
+
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            let gridBox;
+            //attach the gridbox to gridboard
+            gridBox = document.createElement("li");
+            gridBox.classList.add("grid-box");
+
+            //attach event handlers to each gridbox
+            gridBox.addEventListener("mouseover", function() {
+                gridBox.style.backgroundColor = "#00ACBA";
+                gridBox.style.margin = "0%";
+                gridBox.style.borderRadius = "0%";
+            });
+
+            gridBoard.appendChild(gridBox);
+
+            boxGroup.push(gridBox);
+        }
+        boxes.push(boxGroup);
+        boxGroup = [];
     }
+
+    boxes[20][4].style.backgroundColor = "#4CAF50";
+    boxes[20][30].style.backgroundColor = "#FFD700";
 }
 
 populateGrid();
+
+//start #4CAF50;
+//finish #FFD700
+//path 008CBA
+//place visited 3f3f3f
+//wall f44336
+
+//https://www.youtube.com/watch?v=wZZyhrJxZRU

@@ -151,22 +151,26 @@ button {
 }
 
 #grid-board {
-    --cols: 25;
-    --rows: 25;
     background-color: black;
     border-radius: 0.2rem;
     position: relative;
+    list-style-type: none;
+    margin: 0;
+    padding: 0.3rem;
+    z-index: 9;
 
+    --cols: 25;
+    --rows: 25;
     display: grid;
     grid-template-columns: repeat(var(--cols), 1fr);
     grid-template-rows: repeat(var(--rows), 1fr);
-    gap: 0.25rem;
-    padding: 0.3rem;
-    z-index: 9;
 }
 
 .grid-box {
+    text-align:center;
     background-color: var(--generic-gray);
+    margin: 0.1rem;
     border-radius: 0.2rem;
     z-index: 10;
+    transition: 1s;
 }

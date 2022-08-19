@@ -90,7 +90,8 @@ function ceaseCurrentProcess() {
  * =======================================
  */
 const gridBoard = document.querySelector("#grid-board");
-const output = document.querySelector("output");
+const startIcon = document.querySelector("#start-icon");
+const destinationIcon = document.querySelector("#destination-icon");
 var boardWidth = window.innerWidth;
 var boardHeight = window.innerHeight - navBar.offsetHeight - 10;
 var boxes = [];
@@ -137,12 +138,20 @@ function populateGrid() {
         boxGroup = [];
     }
 
-    //boxes[0][0].style.backgroundColor = "#4CAF50";
-    //boxes[0][1].style.backgroundColor = "#FFD700";
+    let midRow = Math.floor(rows / 2);
+    let startCol = Math.floor(cols / 3), finishCol = Math.floor( (cols * 2) / 3);
+    initializeStartFinish(boxes[midRow][startCol], boxes[midRow][finishCol]);
 }
 
-const startIcon = document.querySelector("#start-icon");
-const destinationIcon = document.querySelector("#destination-icon");
+function initializeStartFinish(start, finish) {
+    start.appendChild(startIcon);
+    start.setAttribute("value", startIcon.dataset.value);
+    start.style.backgroundColor = startIcon.dataset.color;
+
+    finish.appendChild(destinationIcon);
+    finish.setAttribute("value", destinationIcon.dataset.value);
+    finish.style.backgroundColor = destinationIcon.dataset.color;
+}
 
 var dragged = null;
 
@@ -163,9 +172,12 @@ document.addEventListener("drop", (event) => {
     let target = event.target;
     if (target.tagName == "LI") {
         dragged.parentNode.setAttribute("value", "blank");
+        dragged.parentNode.style.backgroundColor = "#cccccc";
         dragged.parentNode.removeChild(dragged);
+
         target.appendChild(dragged);
         target.setAttribute("value", dragged.dataset.value);
+        target.style.backgroundColor = dragged.dataset.color;
     }
 });
 

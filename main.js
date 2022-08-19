@@ -98,12 +98,26 @@ var boxes = [];
 gridBoard.style.width = boardWidth;
 gridBoard.style.height = `${boardHeight}px`;
 
+function dropListener(event) {
+    event.preventDefault();
+    let elementID = event.dataTransfer.getData("text");
+    let value = event.dataTransfer.getData("value");
+    let target = event.target;
+    if (target.tagName == "LI") {
+        target.appendChild(document.getElementById(elementID));
+    }
+    target.setAttribute("value", value);
+    target.removeEventListener("dragover", dragoverListener, true);
+}
 
+function dragoverListener(event) {
+    event.preventDefault();
+}
 
 function populateGrid() {
     //set the grid's size  adaptively to the user's screen
-    let rows = Math.floor(boardHeight / 30); 
-    let cols = Math.floor(boardWidth / 30); 
+    let rows = Math.floor(boardHeight / 30);
+    let cols = Math.floor(boardWidth / 30);
     gridBoard.style.setProperty("--rows", rows);
     gridBoard.style.setProperty("--cols", cols);
 
@@ -115,13 +129,19 @@ function populateGrid() {
             //attach the gridbox to gridboard
             gridBox = document.createElement("li");
             gridBox.classList.add("grid-box");
+            gridBox.setAttribute("value", "blank");
 
             //attach event handlers to each gridbox
+            /*
             gridBox.addEventListener("mouseover", function() {
                 gridBox.style.backgroundColor = "#00ACBA";
                 gridBox.style.margin = "0%";
                 gridBox.style.borderRadius = "0%";
             });
+            */
+
+            gridBox.addEventListener("drop", dropListener, true);
+            gridBox.addEventListener("dragover", dragoverListener, true);
 
             gridBoard.appendChild(gridBox);
 
@@ -135,6 +155,25 @@ function populateGrid() {
     boxes[20][30].style.backgroundColor = "#FFD700";
 }
 
+const startIcon = document.querySelector("#start-icon");
+startIcon.addEventListener("dragstart", function (event) {
+    event.dataTransfer.setData("text", event.target.id);
+    event.dataTransfer.setData("value", "start");
+});
+const destinationIcon = document.querySelector("#destination-icon");
+destinationIcon.addEventListener("dragstart", function (event) {
+    event.dataTransfer.setData("text", event.target.id);
+    event.dataTransfer.setData("value", "finish");
+});
+
+function dragListener(event) {
+    let gridBox = event.target.parentElement;
+    gridBox.setAttribute("value", "blank");
+    gridBox.addEventListener("dragover", dragoverListener, true);
+}
+
+startIcon.addEventListener("drag", dragListener, true);
+destinationIcon.addEventListener("drag", dragListener, true);
 populateGrid();
 
 //start #4CAF50;

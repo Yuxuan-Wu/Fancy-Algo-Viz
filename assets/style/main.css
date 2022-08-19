@@ -11,7 +11,7 @@
 }
 
 * {
-    -border: white solid thin;
+    -border: black solid thin;
 }
 
 .row {
@@ -154,9 +154,9 @@ button {
     background-color: black;
     border-radius: 0.2rem;
     position: relative;
-    list-style-type: none;
+    list-style: none;
     margin: 0;
-    padding: 0.3rem;
+    padding: 0;
     z-index: 9;
 
     --cols: 25;
@@ -167,10 +167,23 @@ button {
 }
 
 .grid-box {
+    align-items: center;
     text-align:center;
     background-color: var(--generic-gray);
     margin: 0.1rem;
+    padding: 0.1rem;
+    line-height: 0;
     border-radius: 0.2rem;
     z-index: 10;
     transition: 1s;
+    user-select: none;
+}
+
+#start-icon #destination-icon {
+    width: 24px;
+    height: 24px;
+}
+
+#start-icon,#destination-icon:hover {
+    cursor: pointer;
 }

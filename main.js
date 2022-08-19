@@ -90,11 +90,16 @@ function ceaseCurrentProcess() {
  * =======================================
  */
 const gridBoard = document.querySelector("#grid-board");
+const findPathBtn = document.querySelector("#find-path-button");
 const startIcon = document.querySelector("#start-icon");
 const destinationIcon = document.querySelector("#destination-icon");
 var boardWidth = window.innerWidth;
 var boardHeight = window.innerHeight - navBar.offsetHeight - 10;
+var rows = Math.floor(boardHeight / 30);
+var cols = Math.floor(boardWidth / 30);
 var boxes = [];
+var dragged = null;
+var start = undefined, finish = undefined;
 
 //set the size of gridBoard According to the user's screen size
 gridBoard.style.width = boardWidth;
@@ -106,8 +111,6 @@ function dragoverListener(event) {
 
 function populateGrid() {
     //set the grid's size  adaptively to the user's screen
-    let rows = Math.floor(boardHeight / 30);
-    let cols = Math.floor(boardWidth / 30);
     gridBoard.style.setProperty("--rows", rows);
     gridBoard.style.setProperty("--cols", cols);
 
@@ -120,6 +123,7 @@ function populateGrid() {
             gridBox = document.createElement("li");
             gridBox.classList.add("grid-box");
             gridBox.setAttribute("value", "blank");
+            gridBox.setAttribute("id", i * cols + j);
 
             //attach event handlers to each gridbox
             /*
@@ -138,9 +142,9 @@ function populateGrid() {
         boxGroup = [];
     }
 
-    let midRow = Math.floor(rows / 2);
-    let startCol = Math.floor(cols / 3), finishCol = Math.floor( (cols * 2) / 3);
-    initializeStartFinish(boxes[midRow][startCol], boxes[midRow][finishCol]);
+    start = boxes[Math.floor(rows / 2)][Math.floor(cols / 3)];
+    finish = boxes[Math.floor(rows / 2)][Math.floor( (cols * 2) / 3)];
+    initializeStartFinish(start, finish);
 }
 
 function initializeStartFinish(start, finish) {
@@ -153,7 +157,42 @@ function initializeStartFinish(start, finish) {
     finish.style.backgroundColor = destinationIcon.dataset.color;
 }
 
-var dragged = null;
+function visit(element) {
+    element.setAttribute("value", "visited");
+    element.style.backgroundColor = "#3f3f3f";
+}
+
+function getNeighbors(element) {
+    let id = parseInt(element.id);
+    let row = Math.floor(id / cols);
+    let col = id % cols;
+    let result = [];
+
+    //top right bottom left
+    result.push(isValidPath(id - cols, row - 1, col));
+    result.push(isValidPath(id + 1, row, col + 1));
+    result.push(isValidPath(id + cols, row + 1, col));
+    result.push(isValidPath(id - 1, row, col - 1));
+
+    return result;
+}
+
+function isValidPath(id, row, col) {
+    if (row >= rows
+        || col >= cols
+        || row < 0
+        || col < 0) {
+        return -1;
+    }
+    
+    let element = document.getElementById(id);
+    let value = element.getAttribute("value");
+    if (value === "wall" || value === "visited") {
+        return -1;
+    }
+
+    return id;
+}
 
 document.addEventListener("dragstart", (event) => {
     //store a ref. on the dragged elem
@@ -176,6 +215,7 @@ document.addEventListener("drop", (event) => {
         dragged.parentNode.removeChild(dragged);
 
         target.appendChild(dragged);
+        getNeighbors(target)
         target.setAttribute("value", dragged.dataset.value);
         target.style.backgroundColor = dragged.dataset.color;
     }

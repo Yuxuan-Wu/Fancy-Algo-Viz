@@ -90,6 +90,7 @@ function ceaseCurrentProcess() {
  * =======================================
  */
 const gridBoard = document.querySelector("#grid-board");
+const output = document.querySelector("output");
 var boardWidth = window.innerWidth;
 var boardHeight = window.innerHeight - navBar.offsetHeight - 10;
 var boxes = [];
@@ -97,18 +98,6 @@ var boxes = [];
 //set the size of gridBoard According to the user's screen size
 gridBoard.style.width = boardWidth;
 gridBoard.style.height = `${boardHeight}px`;
-
-function dropListener(event) {
-    event.preventDefault();
-    let elementID = event.dataTransfer.getData("text");
-    let value = event.dataTransfer.getData("value");
-    let target = event.target;
-    if (target.tagName == "LI") {
-        target.appendChild(document.getElementById(elementID));
-    }
-    target.setAttribute("value", value);
-    target.removeEventListener("dragover", dragoverListener, true);
-}
 
 function dragoverListener(event) {
     event.preventDefault();
@@ -140,9 +129,6 @@ function populateGrid() {
             });
             */
 
-            gridBox.addEventListener("drop", dropListener, true);
-            gridBox.addEventListener("dragover", dragoverListener, true);
-
             gridBoard.appendChild(gridBox);
 
             boxGroup.push(gridBox);
@@ -151,29 +137,38 @@ function populateGrid() {
         boxGroup = [];
     }
 
-    boxes[20][4].style.backgroundColor = "#4CAF50";
-    boxes[20][30].style.backgroundColor = "#FFD700";
+    //boxes[0][0].style.backgroundColor = "#4CAF50";
+    //boxes[0][1].style.backgroundColor = "#FFD700";
 }
 
 const startIcon = document.querySelector("#start-icon");
-startIcon.addEventListener("dragstart", function (event) {
-    event.dataTransfer.setData("text", event.target.id);
-    event.dataTransfer.setData("value", "start");
-});
 const destinationIcon = document.querySelector("#destination-icon");
-destinationIcon.addEventListener("dragstart", function (event) {
-    event.dataTransfer.setData("text", event.target.id);
-    event.dataTransfer.setData("value", "finish");
+
+var dragged = null;
+
+document.addEventListener("dragstart", (event) => {
+    //store a ref. on the dragged elem
+    dragged = event.target;
 });
 
-function dragListener(event) {
-    let gridBox = event.target.parentElement;
-    gridBox.setAttribute("value", "blank");
-    gridBox.addEventListener("dragover", dragoverListener, true);
-}
+document.addEventListener("dragover", (event) => {
+    //prevent default to allow drop
+    event.preventDefault();
+});
 
-startIcon.addEventListener("drag", dragListener, true);
-destinationIcon.addEventListener("drag", dragListener, true);
+document.addEventListener("drop", (event) => {
+    //prevent default action (open as link for some elements)
+    event.preventDefault();
+    //move dragged element to the selected drop target
+    let target = event.target;
+    if (target.tagName == "LI") {
+        dragged.parentNode.setAttribute("value", "blank");
+        dragged.parentNode.removeChild(dragged);
+        target.appendChild(dragged);
+        target.setAttribute("value", dragged.dataset.value);
+    }
+});
+
 populateGrid();
 
 //start #4CAF50;

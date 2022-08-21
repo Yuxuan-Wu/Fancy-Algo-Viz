@@ -99,16 +99,50 @@ var rows = Math.floor(boardHeight / 30);
 var cols = Math.floor(boardWidth / 30);
 var boxes = [];
 var dragged = null;
-var start = undefined, finish = undefined;
 
 //set the size of gridBoard According to the user's screen size
 gridBoard.style.width = boardWidth;
 gridBoard.style.height = `${boardHeight}px`;
 
-function dragoverListener(event) {
-    event.preventDefault();
-}
+/**
+ * Bind event listeners
+ * ====================
+ */
+document.addEventListener("dragstart", (event) => {
+    //store a ref. on the dragged elem
+    dragged = event.target;
+});
 
+document.addEventListener("dragover", (event) => {
+    //prevent default to allow drop
+    event.preventDefault();
+});
+
+document.addEventListener("drop", (event) => {
+    //prevent default action (open as link for some elements)
+    event.preventDefault();
+    //move dragged element to the selected drop target
+    let target = event.target;
+    if (target.tagName == "LI") {
+        dragged.parentNode.setAttribute("value", "blank");
+        dragged.parentNode.style.backgroundColor = "#cccccc";
+        dragged.parentNode.removeChild(dragged);
+
+        target.appendChild(dragged);
+        getNeighbors(target)
+        target.setAttribute("value", dragged.dataset.value);
+        target.style.backgroundColor = dragged.dataset.color;
+    }
+});
+
+findPathBtn.addEventListener("click", (event) => {
+    dfsFindPath();
+});
+
+/**
+ * Grid operations
+ * ===============
+ */
 function populateGrid() {
     //set the grid's size  adaptively to the user's screen
     gridBoard.style.setProperty("--rows", rows);
@@ -142,9 +176,9 @@ function populateGrid() {
         boxGroup = [];
     }
 
-    start = boxes[Math.floor(rows / 2)][Math.floor(cols / 3)];
-    finish = boxes[Math.floor(rows / 2)][Math.floor( (cols * 2) / 3)];
-    initializeStartFinish(start, finish);
+    let startBox = boxes[Math.floor(rows / 2)][Math.floor(cols / 3)];
+    let finishBox = boxes[Math.floor(rows / 2)][Math.floor( (cols * 2) / 3)];
+    initializeStartFinish(startBox, finishBox);
 }
 
 function initializeStartFinish(start, finish) {
@@ -157,9 +191,96 @@ function initializeStartFinish(start, finish) {
     finish.style.backgroundColor = destinationIcon.dataset.color;
 }
 
+function findIconPosition(icon) {
+    let boxId = icon.parentNode.id;
+    return document.getElementById(boxId);
+}
+
+/**
+ * Graph algorithms for path finding
+ * =================================
+ */
+async function bfsFindPath() {
+    let queue = [];
+    let start = findIconPosition(startIcon), finish = findIconPosition(destinationIcon);    
+
+    queue.push(start);
+    visit(start);
+    let curr, neighbors, tempElement;
+
+    while (queue.length !== 0) {
+        curr = queue.shift();
+
+        //if the curr is finish
+        if (curr.id == finish.id) {
+            return curr;
+        }
+        else {
+            //for each neighbors to curr, get their id
+            neighbors = getNeighbors(curr);
+            for (var i = 0; i < neighbors.length; i++) {
+                //a neighbor is valid if its id is >= 0
+                if (neighbors[i] >= 0) {
+                    tempElement = document.getElementById(neighbors[i]);
+                    visit(tempElement);
+                    tempElement.setAttribute("previous", curr.id);
+                    if (neighbors[i] == finish.id) {
+                        return curr;
+                    }
+                    queue.push(tempElement);
+                    await sleep(5);
+                }
+            }
+        }
+    }
+
+    return null;
+}
+
+async function dfsFindPath() {
+    let stack = [];
+    let start = findIconPosition(startIcon), finish = findIconPosition(destinationIcon);    
+
+    stack.push(start);
+    visit(start);
+    let curr, neighbors, tempElement;
+
+    while (stack.length !== 0) {
+        curr = stack.pop();
+
+        //if the curr is finish
+        if (curr.id == finish.id) {
+            return curr;
+        }
+        else {
+            //for each neighbors to curr, get their id
+            neighbors = getNeighbors(curr);
+            for (var i = 0; i < neighbors.length; i++) {
+                //a neighbor is valid if its id is >= 0
+                if (neighbors[i] >= 0) {
+                    tempElement = document.getElementById(neighbors[i]);
+                    visit(tempElement);
+                    tempElement.setAttribute("previous", curr.id);
+                    if (neighbors[i] == finish.id) {
+                        return curr;
+                    }
+                    stack.push(tempElement);
+                    await sleep(5);
+                }
+            }
+        }
+    }
+
+    return null;
+}
+
+/**
+ * GridBox operations
+ * ==================
+ */
 function visit(element) {
     element.setAttribute("value", "visited");
-    element.style.backgroundColor = "#3f3f3f";
+    element.style.backgroundColor = "#4f4f4f";
 }
 
 function getNeighbors(element) {
@@ -194,39 +315,16 @@ function isValidPath(id, row, col) {
     return id;
 }
 
-document.addEventListener("dragstart", (event) => {
-    //store a ref. on the dragged elem
-    dragged = event.target;
-});
-
-document.addEventListener("dragover", (event) => {
-    //prevent default to allow drop
-    event.preventDefault();
-});
-
-document.addEventListener("drop", (event) => {
-    //prevent default action (open as link for some elements)
-    event.preventDefault();
-    //move dragged element to the selected drop target
-    let target = event.target;
-    if (target.tagName == "LI") {
-        dragged.parentNode.setAttribute("value", "blank");
-        dragged.parentNode.style.backgroundColor = "#cccccc";
-        dragged.parentNode.removeChild(dragged);
-
-        target.appendChild(dragged);
-        getNeighbors(target)
-        target.setAttribute("value", dragged.dataset.value);
-        target.style.backgroundColor = dragged.dataset.color;
-    }
-});
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 populateGrid();
 
 //start #4CAF50;
 //finish #FFD700
 //path 008CBA
-//place visited 3f3f3f
+//place visited 4f4f4f
 //wall f44336
 
 //https://www.youtube.com/watch?v=wZZyhrJxZRU

@@ -168,14 +168,14 @@ button {
 
 .grid-box {
     align-items: center;
-    text-align:center;
+    text-align: center;
     background-color: var(--generic-gray);
     margin: 0.1rem;
     padding: 0.1rem;
     line-height: 0;
     border-radius: 0.2rem;
     z-index: 10;
-    transition: 1s;
+    transition: 0.5s;
     user-select: none;
 }
 

@@ -92,19 +92,32 @@ function ceaseCurrentProcess() {
 const gridBoard = document.querySelector("#grid-board");
 const findPathBtn = document.querySelector("#find-path-button");
 const createWallBtn = document.querySelector("#create-wall-button");
+const resetGridBtn = document.querySelector("#reset-grid-button");
 const startIcon = document.querySelector("#start-icon");
 const destinationIcon = document.querySelector("#destination-icon");
-var boardWidth = window.innerWidth;
-var boardHeight = window.innerHeight - navBar.offsetHeight - 10;
-var rows = Math.floor(boardHeight / 30);
-var cols = Math.floor(boardWidth / 30);
-var boxes = [];
-var dragged = null;
-var creatingWall = false;
+var boardWidth = undefined;
+var boardHeight = undefined;
+var rows = undefined;
+var cols = undefined;
+var boxes = undefined;
+var dragged = undefined;
+var creatingWall = undefined;
 
-//set the size of gridBoard According to the user's screen size
-gridBoard.style.width = boardWidth;
-gridBoard.style.height = `${boardHeight}px`;
+function initializeGridBoard() {
+    boardWidth = window.innerWidth;
+    boardHeight = window.innerHeight - navBar.offsetHeight - 10;
+    rows = Math.floor(boardHeight / 30);
+    cols = Math.floor(boardWidth / 30);
+    boxes = [];
+    dragged = null;
+    creatingWall = false;
+
+    //set the size of gridBoard According to the user's screen size
+    gridBoard.style.width = boardWidth;
+    gridBoard.style.height = `${boardHeight}px`;
+}
+
+initializeGridBoard();
 
 /**
  * Bind event listeners
@@ -140,23 +153,34 @@ document.addEventListener("drop", (event) => {
     }
 });
 
-document.addEventListener("mousedown", function() {
+document.addEventListener("mousedown", function () {
     creatingWall = true;
 });
 
-document.addEventListener("mouseup", function() {
+document.addEventListener("mouseup", function () {
     creatingWall = false;
 });
 
-createWallBtn.addEventListener("click", function() {
+resetGridBtn.addEventListener("click", function () {
+    //reset settings
+
+    //reset grid
+    gridBoard.innerHTML = "";
+    initializeGridBoard();
+    populateGrid();
+});
+
+createWallBtn.addEventListener("click", function () {
     createWallBtn.value ^= true;
 });
 
 findPathBtn.addEventListener("click", findPathBtnListener, true);
 
 async function findPathBtnListener(event) {
+    resetGridBtn.style.visibility = "hidden";
     await bfsFindPath();
-    showPath();
+    await showPath();
+    resetGridBtn.style.visibility = "visible";
 }
 
 /**
@@ -181,14 +205,14 @@ function populateGrid() {
             gridBox.setAttribute("previous", "");
 
             //attach event handlers to each gridbox
-            gridBox.addEventListener("mouseover", function() {
+            gridBox.addEventListener("mouseover", function () {
                 //if create wall button is active and user's mouse is down
                 if (createWallBtn.value == true && creatingWall) {
                     setAsWall(gridBox);
                 }
             });
 
-            gridBox.addEventListener("click", function() {
+            gridBox.addEventListener("click", function () {
                 destructWall(gridBox);
             });
 
@@ -201,7 +225,7 @@ function populateGrid() {
     }
 
     let startBox = boxes[Math.floor(rows / 2)][Math.floor(cols / 3)];
-    let finishBox = boxes[Math.floor(rows / 2)][Math.floor( (cols * 2) / 3)];
+    let finishBox = boxes[Math.floor(rows / 2)][Math.floor((cols * 2) / 3)];
     initializeStartFinish(startBox, finishBox);
 }
 
@@ -226,7 +250,7 @@ function findIconPosition(icon) {
  */
 async function bfsFindPath() {
     let queue = [];
-    let start = findIconPosition(startIcon), finish = findIconPosition(destinationIcon);    
+    let start = findIconPosition(startIcon), finish = findIconPosition(destinationIcon);
 
     queue.push(start);
     visit(start);
@@ -263,7 +287,7 @@ async function bfsFindPath() {
 
 async function dfsFindPath() {
     let stack = [];
-    let start = findIconPosition(startIcon), finish = findIconPosition(destinationIcon);    
+    let start = findIconPosition(startIcon), finish = findIconPosition(destinationIcon);
 
     stack.push(start);
     visit(start);
@@ -322,6 +346,7 @@ async function showPath() {
     }
 
     //recover the color coding for start and finish 
+    await sleep(500);
     finish.style.backgroundColor = startIcon.dataset.color;
     start.style.backgroundColor = destinationIcon.dataset.color;
 }
@@ -352,7 +377,7 @@ function destructWall(element) {
     if (element.getAttribute("value") === "wall") {
         element.setAttribute("value", "blank");
         element.style.backgroundColor = "#cccccc";
-    }   
+    }
 }
 
 function getNeighbors(element) {
@@ -377,7 +402,7 @@ function isValidPath(id, row, col) {
         || col < 0) {
         return -1;
     }
-    
+
     let element = document.getElementById(id);
     let value = element.getAttribute("value");
     if (value === "wall" || value === "visited") {

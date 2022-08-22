@@ -188,6 +188,10 @@ function populateGrid() {
                 }
             });
 
+            gridBox.addEventListener("click", function() {
+                destructWall(gridBox);
+            });
+
             gridBoard.appendChild(gridBox);
 
             boxGroup.push(gridBox);
@@ -342,6 +346,13 @@ function setAsWall(element) {
     }
     element.setAttribute("value", "wall");
     element.style.backgroundColor = "#f44336";
+}
+
+function destructWall(element) {
+    if (element.getAttribute("value") === "wall") {
+        element.setAttribute("value", "blank");
+        element.style.backgroundColor = "#cccccc";
+    }   
 }
 
 function getNeighbors(element) {

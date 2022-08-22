@@ -91,6 +91,7 @@ function ceaseCurrentProcess() {
  */
 const gridBoard = document.querySelector("#grid-board");
 const findPathBtn = document.querySelector("#find-path-button");
+const createWallBtn = document.querySelector("#create-wall-button");
 const startIcon = document.querySelector("#start-icon");
 const destinationIcon = document.querySelector("#destination-icon");
 var boardWidth = window.innerWidth;
@@ -99,6 +100,7 @@ var rows = Math.floor(boardHeight / 30);
 var cols = Math.floor(boardWidth / 30);
 var boxes = [];
 var dragged = null;
+var creatingWall = false;
 
 //set the size of gridBoard According to the user's screen size
 gridBoard.style.width = boardWidth;
@@ -109,8 +111,10 @@ gridBoard.style.height = `${boardHeight}px`;
  * ====================
  */
 document.addEventListener("dragstart", (event) => {
-    //store a ref. on the dragged elem
+    //store a reference on the dragged element
     dragged = event.target;
+    //prevent the user from creating wall while dragging
+    creatingWall = false;
 });
 
 document.addEventListener("dragover", (event) => {
@@ -136,10 +140,22 @@ document.addEventListener("drop", (event) => {
     }
 });
 
+document.addEventListener("mousedown", function() {
+    creatingWall = true;
+});
+
+document.addEventListener("mouseup", function() {
+    creatingWall = false;
+});
+
+createWallBtn.addEventListener("click", function() {
+    createWallBtn.value ^= true;
+});
+
 findPathBtn.addEventListener("click", findPathBtnListener, true);
 
 async function findPathBtnListener(event) {
-    await dfsFindPath();
+    await bfsFindPath();
     showPath();
 }
 
@@ -165,13 +181,12 @@ function populateGrid() {
             gridBox.setAttribute("previous", "");
 
             //attach event handlers to each gridbox
-            /*
             gridBox.addEventListener("mouseover", function() {
-                gridBox.style.backgroundColor = "#00ACBA";
-                gridBox.style.margin = "0%";
-                gridBox.style.borderRadius = "0%";
+                //if create wall button is active and user's mouse is down
+                if (createWallBtn.value == true && creatingWall) {
+                    setAsWall(gridBox);
+                }
             });
-            */
 
             gridBoard.appendChild(gridBox);
 
@@ -318,6 +333,15 @@ function visit(element) {
 
 function markAsPath(element) {
     element.style.backgroundColor = "#008CBA";
+}
+
+function setAsWall(element) {
+    let start = findIconPosition(startIcon), finish = findIconPosition(destinationIcon);
+    if (element == start || element == finish) {
+        return;
+    }
+    element.setAttribute("value", "wall");
+    element.style.backgroundColor = "#f44336";
 }
 
 function getNeighbors(element) {

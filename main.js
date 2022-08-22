@@ -121,8 +121,9 @@ document.addEventListener("dragover", (event) => {
 document.addEventListener("drop", (event) => {
     //prevent default action (open as link for some elements)
     event.preventDefault();
-    //move dragged element to the selected drop target
+
     let target = event.target;
+    //can only be dropped upon when the target element is a box
     if (target.tagName == "LI") {
         dragged.parentNode.setAttribute("value", "blank");
         dragged.parentNode.style.backgroundColor = "#cccccc";
@@ -135,9 +136,12 @@ document.addEventListener("drop", (event) => {
     }
 });
 
-findPathBtn.addEventListener("click", (event) => {
-    dfsFindPath();
-});
+findPathBtn.addEventListener("click", findPathBtnListener, true);
+
+async function findPathBtnListener(event) {
+    await dfsFindPath();
+    showPath();
+}
 
 /**
  * Grid operations
@@ -158,6 +162,7 @@ function populateGrid() {
             gridBox.classList.add("grid-box");
             gridBox.setAttribute("value", "blank");
             gridBox.setAttribute("id", i * cols + j);
+            gridBox.setAttribute("previous", "");
 
             //attach event handlers to each gridbox
             /*
@@ -228,7 +233,7 @@ async function bfsFindPath() {
                         return curr;
                     }
                     queue.push(tempElement);
-                    await sleep(5);
+                    await sleep(20);
                 }
             }
         }
@@ -265,13 +270,41 @@ async function dfsFindPath() {
                         return curr;
                     }
                     stack.push(tempElement);
-                    await sleep(5);
+                    await sleep(20);
                 }
             }
         }
     }
 
     return null;
+}
+
+async function showPath() {
+    let path = [];
+    let start = findIconPosition(startIcon), finish = findIconPosition(destinationIcon);
+    let curr = finish;
+    let previousID = undefined;
+
+    path.push(curr);
+    previousID = parseInt(curr.getAttribute("previous"));
+
+    while (curr.getAttribute("previous") !== "") {
+        previousID = parseInt(curr.getAttribute("previous"));
+        curr = document.getElementById(previousID);
+        path.push(curr);
+    }
+
+    //if a path exists
+    if (path.includes(start)) {
+        for (var i = path.length - 1; i >= 0; i--) {
+            await sleep(20);
+            markAsPath(path[i]);
+        }
+    }
+
+    //recover the color coding for start and finish 
+    finish.style.backgroundColor = startIcon.dataset.color;
+    start.style.backgroundColor = destinationIcon.dataset.color;
 }
 
 /**
@@ -281,6 +314,10 @@ async function dfsFindPath() {
 function visit(element) {
     element.setAttribute("value", "visited");
     element.style.backgroundColor = "#4f4f4f";
+}
+
+function markAsPath(element) {
+    element.style.backgroundColor = "#008CBA";
 }
 
 function getNeighbors(element) {
@@ -326,5 +363,3 @@ populateGrid();
 //path 008CBA
 //place visited 4f4f4f
 //wall f44336
-
-//https://www.youtube.com/watch?v=wZZyhrJxZRU

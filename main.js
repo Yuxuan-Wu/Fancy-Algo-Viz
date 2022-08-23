@@ -15,10 +15,11 @@ var currApp;
  * HTML element
  * ============
  */
-const homeBtn = document.querySelector("#home");
+const graphAlgoViz = document.querySelector("#graphAlgoViz");
 const backgroundMusic = document.querySelector("#background-music");
 const physicsSim = document.querySelector("#physicsSim");
 const navBar = document.querySelector("#navbar");
+const graphAlgoControlPanel = document.querySelector("#graph-algo-control-panel");
 
 /**
  * Canvas settings
@@ -37,10 +38,9 @@ const frameDelay = 1000.0 / frameRate;
  * Bind event listeners
  * ====================
  */
-homeBtn.addEventListener("click", function () {
-    backgroundMusic.play();
-
-    ceaseCurrentProcess();
+graphAlgoViz.addEventListener("click", function () {
+    navBar.style.display = "none";
+    graphAlgoControlPanel.style.display = "block";
 });
 
 physicsSim.addEventListener("click", function () {
@@ -67,7 +67,6 @@ function ceaseCurrentProcess() {
     Firework.removeEventlisteners();
 
     clearInterval(currApp);
-    window.cancelAnimationFrame(currApp);
 }
 
 //TODO
@@ -90,9 +89,10 @@ function ceaseCurrentProcess() {
  * =======================================
  */
 const gridBoard = document.querySelector("#grid-board");
-const findPathBtn = document.querySelector("#find-path-button");
-const createWallBtn = document.querySelector("#create-wall-button");
-const resetGridBtn = document.querySelector("#reset-grid-button");
+const homeBtn = document.querySelector("#graph-algo-home");
+const findPathBtn = document.querySelector("#graph-algo-find-path");
+const createWallBtn = document.querySelector("#graph-algo-create-wall");
+const resetGridBtn = document.querySelector("#graph-algo-reset");
 const startIcon = document.querySelector("#start-icon");
 const destinationIcon = document.querySelector("#destination-icon");
 var boardWidth = undefined;
@@ -161,6 +161,13 @@ document.addEventListener("mouseup", function () {
     creatingWall = false;
 });
 
+homeBtn.addEventListener("click", homeBtnListener, true);
+
+function homeBtnListener() {
+    graphAlgoControlPanel.style.display = "none";
+    navBar.style.display = "block";
+}
+
 resetGridBtn.addEventListener("click", function () {
     //reset settings
 
@@ -177,10 +184,21 @@ createWallBtn.addEventListener("click", function () {
 findPathBtn.addEventListener("click", findPathBtnListener, true);
 
 async function findPathBtnListener(event) {
+    //before a solution was found
+    startIcon.setAttribute("draggable", false);
+    destinationIcon.setAttribute("draggable", false);
     resetGridBtn.style.visibility = "hidden";
+    homeBtn.removeEventListener("click", homeBtnListener, true);
+
+    //path-finding in progress
     await bfsFindPath();
     await showPath();
+
+    //after a solution is found
+    destinationIcon.setAttribute("draggable", true);
+    startIcon.setAttribute("draggable", true);
     resetGridBtn.style.visibility = "visible";
+    homeBtn.addEventListener("click", homeBtnListener, true);
 }
 
 /**
@@ -347,8 +365,8 @@ async function showPath() {
 
     //recover the color coding for start and finish 
     await sleep(500);
-    finish.style.backgroundColor = startIcon.dataset.color;
-    start.style.backgroundColor = destinationIcon.dataset.color;
+    start.style.backgroundColor = startIcon.dataset.color;
+    finish.style.backgroundColor = destinationIcon.dataset.color;
 }
 
 /**

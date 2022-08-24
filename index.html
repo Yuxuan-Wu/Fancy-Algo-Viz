@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    
+
     <ul id="navbar">
         <li><button type="button" id="graphAlgoViz">Graph Algorithm Visualization</button></li>
         <li><button type="button" id="physicsSim">Physics Simulations</button></li>
@@ -28,6 +28,12 @@
         <li><button type="button" id="graph-algo-home">Home</button></li>
         <li><button type="button" id="graph-algo-find-path">Find Path</button></li>
         <li><button type="button" id="graph-algo-create-wall">Create Wall</button></li>
+        <li>
+            <select id="graph-algo-menu">
+                <option value="bfs">BFS</option>
+                <option value="dfs">DFS</option>
+            </select>
+        </li>
         <li><button type="button" id="graph-algo-reset">Reset</button></li>
     </ul>
 
@@ -59,11 +65,11 @@
 
     <canvas id="canvas"> This project can only run if Canvas is supported and Javascript is enabled </canvas>
 
-    <image id="start-icon" alt="start" src="./assets/images/start_icon.png" 
-        draggable="true" width="24" height="24" data-value="start" data-color="#4CAF50"></image>
-    <image id="destination-icon" alt="finish" src="./assets/images/destination_icon.png"
-        draggable="true" width="24" height="24" data-value="finish" data-color="#FFD700"></image>
-        
+    <image id="start-icon" alt="start" src="./assets/images/start_icon.png" draggable="true" width="24" height="24"
+        data-value="start" data-color="#4CAF50"></image>
+    <image id="destination-icon" alt="finish" src="./assets/images/destination_icon.png" draggable="true" width="24"
+        height="24" data-value="finish" data-color="#FFD700"></image>
+
     <ul id="grid-board"></ul>
 
     <audio id="background-music" src="./assets/music/ZoodDZ.mp3" loop />

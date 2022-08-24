@@ -1,6 +1,6 @@
 :root {
     --main-bg-color: rgb(38, 39, 41);
-    --nav-bar-color: rgb(21, 22, 24);
+    --nav-bar-color: rgb(41, 42, 47);
     --shadow-color: rgba(0, 0, 0, .5);
 
     --generic-green: #4CAF50;
@@ -112,7 +112,6 @@ button {
 #graph-algo-control-panel {
     display: none;
     position: relative;
-    -display: block;
     background-color: var(--nav-bar-color);
     overflow: hidden;
     list-style-type: none;
@@ -130,7 +129,7 @@ button {
     margin: 0%;
 }
 
-#graph-algo-control-panel button {
+#graph-algo-control-panel button, select {
     border: none;
     margin: 0%;
     padding: 1.2rem;
@@ -145,6 +144,10 @@ button {
     background-color: rgb(131, 131, 131);
     cursor: pointer;
     color: white;
+}
+
+#graph-algo-menu option {
+    background-color: var(--nav-bar-color);
 }
 
 #firework-control-panel {
@@ -222,6 +225,7 @@ button {
     height: 24px;
 }
 
-#start-icon,#destination-icon:hover {
+#start-icon,
+#destination-icon:hover {
     cursor: pointer;
 }

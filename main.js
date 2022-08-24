@@ -93,6 +93,7 @@ const homeBtn = document.querySelector("#graph-algo-home");
 const findPathBtn = document.querySelector("#graph-algo-find-path");
 const createWallBtn = document.querySelector("#graph-algo-create-wall");
 const resetGridBtn = document.querySelector("#graph-algo-reset");
+const algoSelectMenu = document.querySelector("#graph-algo-menu");
 const startIcon = document.querySelector("#start-icon");
 const destinationIcon = document.querySelector("#destination-icon");
 var boardWidth = undefined;
@@ -118,6 +119,7 @@ function initializeGridBoard() {
 }
 
 initializeGridBoard();
+populateGrid();
 
 /**
  * Bind event listeners
@@ -191,7 +193,15 @@ async function findPathBtnListener(event) {
     homeBtn.removeEventListener("click", homeBtnListener, true);
 
     //path-finding in progress
-    await bfsFindPath();
+    switch (algoSelectMenu.value) {
+        case "bfs":
+            await bfsFindPath();
+            break;
+        case "dfs":
+            await dfsFindPath();
+            break;
+    }
+
     await showPath();
 
     //after a solution is found
@@ -433,8 +443,6 @@ function isValidPath(id, row, col) {
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
-populateGrid();
 
 //start #4CAF50;
 //finish #FFD700

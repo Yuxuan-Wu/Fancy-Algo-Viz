@@ -86,14 +86,17 @@ function homeBtnListener() {
     navBar.style.display = "block";
 }
 
-resetGridBtn.addEventListener("click", function () {
+resetGridBtn.addEventListener("click", resetGridBtnListener, true);
+function resetGridBtnListener() {
     //reset settings
-    
+    createWallBtn.value = 0;
+    createWallBtn.style.backgroundColor = "rgb(41, 42, 47)";
+
     //reset grid
     gridBoard.innerHTML = "";
     initializeGridBoard();
     populateGrid();
-});
+}
 
 createWallBtn.addEventListener("click", function () {
     createWallBtn.value ^= true;
@@ -110,7 +113,7 @@ async function findPathBtnListener(event) {
     //before a solution was found
     startIcon.setAttribute("draggable", false);
     destinationIcon.setAttribute("draggable", false);
-    resetGridBtn.style.visibility = "hidden";
+    resetGridBtn.removeEventListener("click", resetGridBtnListener, true);
     homeBtn.removeEventListener("click", homeBtnListener, true);
 
     //path-finding in progress
@@ -128,7 +131,7 @@ async function findPathBtnListener(event) {
     //after a solution is found
     destinationIcon.setAttribute("draggable", true);
     startIcon.setAttribute("draggable", true);
-    resetGridBtn.style.visibility = "visible";
+    resetGridBtn.addEventListener("click", resetGridBtnListener, true);
     homeBtn.addEventListener("click", homeBtnListener, true);
 }
 

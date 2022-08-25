@@ -15,11 +15,14 @@ var currApp;
  * HTML element
  * ============
  */
-const graphAlgoViz = document.querySelector("#graphAlgoViz");
+
 const backgroundMusic = document.querySelector("#background-music");
+const graphAlgoViz = document.querySelector("#graphAlgoViz");
 const physicsSim = document.querySelector("#physicsSim");
 const navBar = document.querySelector("#navbar");
 const graphAlgoControlPanel = document.querySelector("#graph-algo-control-panel");
+const startIcon = document.querySelector("#start-icon");
+const destinationIcon = document.querySelector("#destination-icon");
 
 /**
  * Canvas settings
@@ -39,8 +42,15 @@ const frameDelay = 1000.0 / frameRate;
  * ====================
  */
 graphAlgoViz.addEventListener("click", function () {
+    ceaseCurrentProcess();
+
     navBar.style.display = "none";
     graphAlgoControlPanel.style.display = "block";
+    startIcon.style.display = "initial";
+    destinationIcon.style.display = "initial";
+    createGrid();
+    initializeGridBoard();
+    populateGrid();
 });
 
 physicsSim.addEventListener("click", function () {
@@ -88,14 +98,14 @@ function ceaseCurrentProcess() {
  * Variable declaration and initialization
  * =======================================
  */
-const gridBoard = document.querySelector("#grid-board");
+const bodyElement = document.querySelector("body");
 const homeBtn = document.querySelector("#graph-algo-home");
 const findPathBtn = document.querySelector("#graph-algo-find-path");
 const createWallBtn = document.querySelector("#graph-algo-create-wall");
 const resetGridBtn = document.querySelector("#graph-algo-reset");
 const algoSelectMenu = document.querySelector("#graph-algo-menu");
-const startIcon = document.querySelector("#start-icon");
-const destinationIcon = document.querySelector("#destination-icon");
+var gridBoard;
+
 var boardWidth = undefined;
 var boardHeight = undefined;
 var rows = undefined;
@@ -117,9 +127,6 @@ function initializeGridBoard() {
     gridBoard.style.width = boardWidth;
     gridBoard.style.height = `${boardHeight}px`;
 }
-
-initializeGridBoard();
-populateGrid();
 
 /**
  * Bind event listeners
@@ -166,6 +173,7 @@ document.addEventListener("mouseup", function () {
 homeBtn.addEventListener("click", homeBtnListener, true);
 
 function homeBtnListener() {
+    gridBoard.remove();
     graphAlgoControlPanel.style.display = "none";
     navBar.style.display = "block";
 }
@@ -181,6 +189,12 @@ resetGridBtn.addEventListener("click", function () {
 
 createWallBtn.addEventListener("click", function () {
     createWallBtn.value ^= true;
+    if (createWallBtn.value == true) {
+        createWallBtn.style.backgroundColor = "#f44336";
+    }
+    else {
+        createWallBtn.style.backgroundColor = "rgb(41, 42, 47)";
+    }
 });
 
 findPathBtn.addEventListener("click", findPathBtnListener, true);
@@ -215,6 +229,12 @@ async function findPathBtnListener(event) {
  * Grid operations
  * ===============
  */
+function createGrid() {
+    gridBoard = document.createElement("ul");
+    gridBoard.setAttribute("id", "grid-board");
+    bodyElement.appendChild(gridBoard);
+}
+
 function populateGrid() {
     //set the grid's size  adaptively to the user's screen
     gridBoard.style.setProperty("--rows", rows);

@@ -220,7 +220,8 @@ button {
     user-select: none;
 }
 
-#start-icon #destination-icon {
+#start-icon, #destination-icon {
+    display: none;
     width: 24px;
     height: 24px;
 }

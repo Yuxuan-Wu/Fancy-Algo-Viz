@@ -34,8 +34,12 @@
                 <option value="dfs">DFS</option>
             </select>
         </li>
+        <label for="pathfinding-speed-slide">Speed:</label>
+        <input type="range" class="slider" id="pathfinding-speed-slide" min="10" max="50" value="20" width="5%">
         <li><button type="button" id="graph-algo-reset">Reset</button></li>
     </ul>
+
+    <p id="pathfinding-in-progress-banner">Pathfinding in progress...</p>
 
     <div id="firework-control-panel" class="column">
         <div class="row">

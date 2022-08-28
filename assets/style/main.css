@@ -11,7 +11,7 @@
 }
 
 * {
-    -border: black solid thin;
+    border: white solid thin;
 }
 
 .row {
@@ -229,4 +229,23 @@ button {
 #start-icon,
 #destination-icon:hover {
     cursor: pointer;
+}
+
+#pathfinding-in-progress-banner {
+    text-align: center;
+    display: none;
+    position: relative;
+    color: rgb(215, 223, 248);
+    background-color: var(--nav-bar-color);
+    width: 100%;
+    margin: 0%;
+    padding: 1.2rem;
+    font-size: 1rem;
+    font-family: 'Trebuchet MS';
+    box-shadow: 0.1rem 0.1rem 0.3rem 0.01rem var(--shadow-color);
+    z-index: 10;
+}
+
+#pathfinding-speed-slide {
+    width: 10% !important;
 }

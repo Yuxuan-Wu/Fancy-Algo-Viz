@@ -13,6 +13,7 @@ const findPathBtn = document.querySelector("#graph-algo-find-path");
 const createWallBtn = document.querySelector("#graph-algo-create-wall");
 const resetGridBtn = document.querySelector("#graph-algo-reset");
 const algoSelectMenu = document.querySelector("#graph-algo-menu");
+const pathfindintInProgressBanner = document.querySelector("#pathfinding-in-progress-banner");
 
 var gridBoard;
 var boardWidth = undefined;
@@ -98,7 +99,8 @@ function resetGridBtnListener() {
     populateGrid();
 }
 
-createWallBtn.addEventListener("click", function () {
+createWallBtn.addEventListener("click", createWallBtnListener, true);
+function createWallBtnListener() {
     createWallBtn.value ^= true;
     if (createWallBtn.value == true) {
         createWallBtn.style.backgroundColor = "#f44336";
@@ -106,15 +108,15 @@ createWallBtn.addEventListener("click", function () {
     else {
         createWallBtn.style.backgroundColor = "rgb(41, 42, 47)";
     }
-});
+};
 
 findPathBtn.addEventListener("click", findPathBtnListener, true);
 async function findPathBtnListener(event) {
     //before a solution was found
-    startIcon.setAttribute("draggable", false);
-    destinationIcon.setAttribute("draggable", false);
-    resetGridBtn.removeEventListener("click", resetGridBtnListener, true);
-    homeBtn.removeEventListener("click", homeBtnListener, true);
+    graphAlgoControlPanel.style.display = "none";
+    createWallBtn.value = 0;
+    createWallBtn.style.backgroundColor = "rgb(41, 42, 47)";
+    pathfindintInProgressBanner.style.display = "block";
 
     //path-finding in progress
     switch (algoSelectMenu.value) {
@@ -129,10 +131,8 @@ async function findPathBtnListener(event) {
     await showPath();
 
     //after a solution is found
-    destinationIcon.setAttribute("draggable", true);
-    startIcon.setAttribute("draggable", true);
-    resetGridBtn.addEventListener("click", resetGridBtnListener, true);
-    homeBtn.addEventListener("click", homeBtnListener, true);
+    pathfindintInProgressBanner.style.display = "none";
+    graphAlgoControlPanel.style.display = "block";
 }
 
 /**
@@ -304,7 +304,7 @@ async function showPath() {
     }
 
     //recover the color coding for start and finish 
-    await sleep(500);
+    await sleep(200);
     start.style.backgroundColor = startIcon.dataset.color;
     finish.style.backgroundColor = destinationIcon.dataset.color;
 }

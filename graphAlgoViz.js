@@ -13,6 +13,7 @@ const findPathBtn = document.querySelector("#graph-algo-find-path");
 const createWallBtn = document.querySelector("#graph-algo-create-wall");
 const resetGridBtn = document.querySelector("#graph-algo-reset");
 const algoSelectMenu = document.querySelector("#graph-algo-menu");
+const pathfindingSpeedMenu = document.querySelector("#pathfinding-speed-menu");
 const pathfindintInProgressBanner = document.querySelector("#pathfinding-in-progress-banner");
 
 var gridBoard;
@@ -26,7 +27,7 @@ var creatingWall = undefined;
 
 export function initializeGridBoard() {
     boardWidth = window.innerWidth;
-    boardHeight = window.innerHeight - navBar.offsetHeight - 10;
+    boardHeight = window.innerHeight - navBar.offsetHeight;
     rows = Math.floor(boardHeight / 30);
     cols = Math.floor(boardWidth / 30);
     boxes = [];
@@ -117,6 +118,7 @@ async function findPathBtnListener(event) {
     createWallBtn.value = 0;
     createWallBtn.style.backgroundColor = "rgb(41, 42, 47)";
     pathfindintInProgressBanner.style.display = "block";
+    gridBoard.scrollIntoView({behavior: "smooth"});
 
     //path-finding in progress
     switch (algoSelectMenu.value) {
@@ -133,6 +135,7 @@ async function findPathBtnListener(event) {
     //after a solution is found
     pathfindintInProgressBanner.style.display = "none";
     graphAlgoControlPanel.style.display = "block";
+    graphAlgoControlPanel.scrollIntoView({behavior: "smooth"});
 }
 
 /**
@@ -234,7 +237,7 @@ async function bfsFindPath() {
                         return curr;
                     }
                     queue.push(tempElement);
-                    await sleep(20);
+                    await sleep(pathfindingSpeedMenu.value);
                 }
             }
         }
@@ -271,7 +274,7 @@ async function dfsFindPath() {
                         return curr;
                     }
                     stack.push(tempElement);
-                    await sleep(20);
+                    await sleep(pathfindingSpeedMenu.value);
                 }
             }
         }
@@ -298,13 +301,13 @@ async function showPath() {
     //if a path exists
     if (path.includes(start)) {
         for (var i = path.length - 1; i >= 0; i--) {
-            await sleep(20);
+            await sleep(pathfindingSpeedMenu.value);
             markAsPath(path[i]);
         }
     }
 
     //recover the color coding for start and finish 
-    await sleep(200);
+    await sleep(10 * pathfindingSpeedMenu.value);
     start.style.backgroundColor = startIcon.dataset.color;
     finish.style.backgroundColor = destinationIcon.dataset.color;
 }

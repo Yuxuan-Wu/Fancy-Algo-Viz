@@ -11,7 +11,7 @@
 }
 
 * {
-    border: white solid thin;
+    -border: white solid thin;
 }
 
 .row {
@@ -244,8 +244,4 @@ button {
     font-family: 'Trebuchet MS';
     box-shadow: 0.1rem 0.1rem 0.3rem 0.01rem var(--shadow-color);
     z-index: 10;
-}
-
-#pathfinding-speed-slide {
-    width: 10% !important;
 }

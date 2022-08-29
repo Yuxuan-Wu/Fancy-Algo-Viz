@@ -1,7 +1,9 @@
+/**
+ * Local imports
+ * =============
+ */
 import { navBar, graphAlgoControlPanel, startIcon, destinationIcon } from "./main.js";
-
-//TODO
-//tutorial
+import { sleep } from "./auxiliary.js";
 
 /**
  * Variable declaration and initialization
@@ -174,7 +176,9 @@ export function populateGrid() {
             });
 
             gridBox.addEventListener("click", function () {
-                destructWall(gridBox);
+                if (createWallBtn.value == true) {
+                    destructWall(gridBox);
+                }
             });
 
             gridBoard.appendChild(gridBox);
@@ -371,12 +375,4 @@ function isValidPath(id, row, col) {
     }
 
     return id;
-}
-
-/**
- * Auxiliary Functions
- * ===================
- */
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }

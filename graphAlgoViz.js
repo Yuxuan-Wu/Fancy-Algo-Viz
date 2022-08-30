@@ -2,7 +2,7 @@
  * Local imports
  * =============
  */
-import { navBar, graphAlgoControlPanel, startIcon, destinationIcon } from "./main.js";
+import { navBar, mainExhibition, graphAlgoControlPanel, startIcon, destinationIcon } from "./main.js";
 import { sleep } from "./auxiliary.js";
 
 /**
@@ -88,6 +88,7 @@ function homeBtnListener() {
     gridBoard.remove();
     graphAlgoControlPanel.style.display = "none";
     navBar.style.display = "block";
+    mainExhibition.style.display = "initial";
 }
 
 resetGridBtn.addEventListener("click", resetGridBtnListener, true);

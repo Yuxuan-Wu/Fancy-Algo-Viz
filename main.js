@@ -19,7 +19,9 @@ var currApp;
 const backgroundMusic = document.querySelector("#background-music");
 const graphAlgoViz = document.querySelector("#graphAlgoViz");
 const physicsSim = document.querySelector("#physicsSim");
+const graphAlgoVizCard = document.querySelector("#graph-algo-viz-card");
 export const navBar = document.querySelector("#navbar");
+export const mainExhibition = document.querySelector("main");
 export const graphAlgoControlPanel = document.querySelector("#graph-algo-control-panel");
 export const startIcon = document.querySelector("#start-icon");
 export const destinationIcon = document.querySelector("#destination-icon");
@@ -43,6 +45,7 @@ const frameDelay = 1000.0 / frameRate;
  */
 graphAlgoViz.addEventListener("click", function () {
     ceaseCurrentProcess();
+    mainExhibition.style.display = "none";
 
     navBar.style.display = "none";
     graphAlgoControlPanel.style.display = "block";
@@ -63,6 +66,10 @@ physicsSim.addEventListener("click", function () {
     currApp = setInterval(function () {
         Firework.update(frameDelay);
     }, frameDelay);
+});
+
+graphAlgoVizCard.addEventListener("click", function () {
+    graphAlgoViz.click();
 });
 
 /**

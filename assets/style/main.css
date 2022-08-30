@@ -54,6 +54,39 @@
     cursor: pointer;
 }
 
+.grid-box {
+    align-items: center;
+    text-align: center;
+    background-color: var(--generic-gray);
+    margin: 0.1rem;
+    padding: 0.1rem;
+    line-height: 0;
+    border-radius: 0.2rem;
+    z-index: 10;
+    transition: 0.5s;
+    user-select: none;
+}
+
+.card {
+    margin: 1rem;
+    background-color: seashell;
+    box-shadow: 0 0.25rem 0.5rem 0 var(--shadow-color);
+    transition: 0.5s;
+    width: 20%;
+}
+
+.card:hover {
+    box-shadow: 0 0.5rem 1rem 0 var(--shadow-color);
+    cursor: pointer;
+}
+
+.card-description {
+    text-align: center;
+    padding: 1rem;
+    font-size: 1rem;
+    font-family: Snell Roundhand, cursive;
+}
+
 body {
     margin: 0%;
     height: 100%;
@@ -129,7 +162,8 @@ button {
     margin: 0%;
 }
 
-#graph-algo-control-panel button, select {
+#graph-algo-control-panel button,
+select {
     border: none;
     margin: 0%;
     padding: 1.2rem;
@@ -148,6 +182,12 @@ button {
 
 #graph-algo-menu option {
     background-color: var(--nav-bar-color);
+}
+
+#exhibition-cards {
+    margin-top: 2rem;
+    align-items: center;
+    justify-content: center;
 }
 
 #firework-control-panel {
@@ -207,20 +247,8 @@ button {
     grid-template-rows: repeat(var(--rows), 1fr);
 }
 
-.grid-box {
-    align-items: center;
-    text-align: center;
-    background-color: var(--generic-gray);
-    margin: 0.1rem;
-    padding: 0.1rem;
-    line-height: 0;
-    border-radius: 0.2rem;
-    z-index: 10;
-    transition: 0.5s;
-    user-select: none;
-}
-
-#start-icon, #destination-icon {
+#start-icon,
+#destination-icon {
     display: none;
     width: 24px;
     height: 24px;

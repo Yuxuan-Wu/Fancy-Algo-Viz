@@ -327,7 +327,6 @@ async function showPath() {
  */
 function visit(element) {
     element.setAttribute("value", "visited");
-    element.setAttribute("previous", "");
     element.style.backgroundColor = "#4f4f4f";
     visited.push(element);
 }
@@ -335,6 +334,7 @@ function visit(element) {
 function recoverVisitedBoxes() {
     for (var i = 0; i < visited.length; i++) {
         visited[i].setAttribute("value", "blank");
+        visited[i].setAttribute("previous", "");
         visited[i].style.backgroundColor = "#cccccc";
     }    
     

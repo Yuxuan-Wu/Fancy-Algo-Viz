@@ -24,6 +24,7 @@ var boardHeight = undefined;
 var rows = undefined;
 var cols = undefined;
 var boxes = undefined;
+var visited = undefined;
 var dragged = undefined;
 var creatingWall = undefined;
 
@@ -33,6 +34,7 @@ export function initializeGridBoard() {
     rows = Math.floor(boardHeight / 30);
     cols = Math.floor(boardWidth / 30);
     boxes = [];
+    visited = [];
     dragged = null;
     creatingWall = false;
 
@@ -72,6 +74,8 @@ document.addEventListener("drop", (event) => {
         getNeighbors(target);
         target.setAttribute("value", dragged.dataset.value);
         target.style.backgroundColor = dragged.dataset.color;
+
+        recoverVisitedBoxes();
     }
 });
 
@@ -323,7 +327,21 @@ async function showPath() {
  */
 function visit(element) {
     element.setAttribute("value", "visited");
+    element.setAttribute("previous", "");
     element.style.backgroundColor = "#4f4f4f";
+    visited.push(element);
+}
+
+function recoverVisitedBoxes() {
+    for (var i = 0; i < visited.length; i++) {
+        visited[i].setAttribute("value", "blank");
+        visited[i].style.backgroundColor = "#cccccc";
+    }    
+    
+    let start = findIconPosition(startIcon), finish = findIconPosition(destinationIcon);
+    start.style.backgroundColor = startIcon.dataset.color;
+    finish.style.backgroundColor = destinationIcon.dataset.color;
+    visited = [];
 }
 
 function markAsPath(element) {

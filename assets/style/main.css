@@ -11,7 +11,7 @@
 }
 
 * {
-    -border: white solid thin;
+    -border: black solid thin;
 }
 
 .row {
@@ -120,7 +120,7 @@ p {
     width: 60%;
 }
 
-#graph-algo-viz-tutorial > * {
+#graph-algo-viz-tutorial>* {
     margin: 0.3rem;
 }
 
@@ -134,13 +134,36 @@ p {
 
 #graph-algo-viz-tutorial p {
     display: inline-block;
-    margin: 1rem;
+}
+
+#graph-algo-viz-tutorial button {
+    background-color: var(--generic-green);
+    border: none;
+    border-radius: 0.5rem;
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1rem;
+    box-shadow: 0.1rem 0.1rem 0.3rem 0.01rem var(--shadow-color);
+    transition: 200ms;
+    float: right;
+}
+
+#graph-algo-viz-tutorial button:hover {
+    cursor: pointer;
+    box-shadow: 0.2rem 0.2rem 0.3rem 0.02rem var(--shadow-color);
 }
 
 .legend {
     display: flex;
     align-items: center;
- }
+}
+
+.legend p {
+    margin: 1rem;
+}
 
 #navbar {
     position: relative;

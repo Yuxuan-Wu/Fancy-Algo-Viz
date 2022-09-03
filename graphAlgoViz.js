@@ -2,7 +2,7 @@
  * Local imports
  * =============
  */
-import { navBar, mainExhibition, graphAlgoControlPanel, startIcon, destinationIcon } from "./main.js";
+import { navBar, mainExhibition, graphAlgoControlPanel, startIcon, destinationIcon, graphAlgoViz_tutorial_dialog_template } from "./main.js";
 import { sleep } from "./auxiliary.js";
 
 /**
@@ -13,9 +13,10 @@ const bodyElement = document.querySelector("body");
 const homeBtn = document.querySelector("#graph-algo-home");
 const findPathBtn = document.querySelector("#graph-algo-find-path");
 const createWallBtn = document.querySelector("#graph-algo-create-wall");
-const resetGridBtn = document.querySelector("#graph-algo-reset");
 const algoSelectMenu = document.querySelector("#graph-algo-menu");
 const pathfindingSpeedMenu = document.querySelector("#pathfinding-speed-menu");
+const resetGridBtn = document.querySelector("#graph-algo-reset");
+const tutorialNLegendsBtn = document.querySelector("#graph-algo-tutorial");
 const pathfindintInProgressBanner = document.querySelector("#pathfinding-in-progress-banner");
 
 var gridBoard;
@@ -106,6 +107,13 @@ function resetGridBtnListener() {
     initializeGridBoard();
     populateGrid();
 }
+
+tutorialNLegendsBtn.addEventListener("click", function () {
+    let dialog_content = graphAlgoViz_tutorial_dialog_template.content.cloneNode(true);
+    let dialog_body = dialog_content.querySelector("#graph-algo-viz-tutorial");
+    document.body.appendChild(dialog_content);
+    dialog_body.showModal();
+});
 
 createWallBtn.addEventListener("click", createWallBtnListener, true);
 function createWallBtnListener() {
@@ -333,9 +341,11 @@ function visit(element) {
 
 function recoverVisitedBoxes() {
     for (var i = 0; i < visited.length; i++) {
-        visited[i].setAttribute("value", "blank");
-        visited[i].setAttribute("previous", "");
-        visited[i].style.backgroundColor = "#cccccc";
+        if (visited[i].getAttribute("value") == "visited") {
+            visited[i].setAttribute("value", "blank");
+            visited[i].setAttribute("previous", "");
+            visited[i].style.backgroundColor = "#cccccc";
+        }
     }    
     
     let start = findIconPosition(startIcon), finish = findIconPosition(destinationIcon);

@@ -52,12 +52,46 @@
             <div id="graph-algo-viz-card" class="card">
                 <img src="./assets/images/graph_algo_viz_card.png" alt="Graph Algo Viz Card" width="100%">
                 <div class="card-description">
-                  <h4><b>Graph Algorithm Visualization</b></h4> 
-                  <p>An interactive application that intuitively visualizes some famous graph algorithms.</p> 
+                    <h4><b>Graph Algorithm Visualization</b></h4>
+                    <p>An interactive application that intuitively visualizes some famous graph algorithms.</p>
                 </div>
             </div>
         </div>
     </main>
+
+    <dialog id="graph-algo-viz-tutorial" open>
+        <h3>Tutorial & Legend</h3>
+        <section class="row">
+            <div class="legend">
+                <image alt="start" draggable="false" src="./assets/images/start_legend.png" width="24" height="24"></image>
+                <p>Starting point for pathfinding</p>
+            </div>
+            
+            <div class="legend">
+                <image alt="finish" draggable="false" src="./assets/images/finish_legend.png" width="24" height="24"></image>
+                <p>Finishing point for pathfinding</p>
+            </div>
+
+            <div class="legend">
+                <image alt="blank" draggable="false" src="./assets/images/visited_legend.png" width="24" height="24"></image>
+                <p>This marks a box that is visited</p>
+            </div>
+
+            <div class="legend">
+                <image alt="blank" draggable="false" src="./assets/images/path_legend.png" width="24" height="24"></image>
+                <p>Highlighted box indicating this is a path</p>
+            </div>
+
+            <div class="legend">
+                <image alt="wall" draggable="false" src="./assets/images/wall_legend.png" width="24" height="24"></image>
+                <p>Represents a wall that is impassable</p>
+            </div>
+        </section>
+
+        <form method="dialog">
+            <button>OK</button>
+        </form>
+    </dialog>
 
     <div id="firework-control-panel" class="column">
         <div class="row">

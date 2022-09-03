@@ -105,6 +105,43 @@ button {
     font-family: 'Trebuchet MS';
 }
 
+p {
+    letter-spacing: 0.025em;
+    line-height: 1.625;
+}
+
+#graph-algo-viz-tutorial {
+    border: none;
+    border-radius: 1rem;
+    background-color: seashell;
+    font-family: Snell Roundhand, cursive;
+    box-shadow: 0.1rem 0.1rem 0.3rem 0.01rem var(--shadow-color);
+    padding: 1.6rem;
+    width: 60%;
+}
+
+#graph-algo-viz-tutorial > * {
+    margin: 0.3rem;
+}
+
+#graph-algo-viz-tutorial section {
+    margin: 3rem 0;
+}
+
+#graph-algo-viz-tutorial image {
+    vertical-align: middle;
+}
+
+#graph-algo-viz-tutorial p {
+    display: inline-block;
+    margin: 1rem;
+}
+
+.legend {
+    display: flex;
+    align-items: center;
+ }
+
 #navbar {
     position: relative;
     display: block;

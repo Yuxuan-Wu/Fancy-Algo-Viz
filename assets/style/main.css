@@ -84,7 +84,7 @@
     text-align: center;
     padding: 1rem;
     font-size: 1rem;
-    font-family: Snell Roundhand, cursive;
+    font-family: 'Trebuchet MS';
 }
 
 body {
@@ -114,7 +114,7 @@ p {
     border: none;
     border-radius: 1rem;
     background-color: seashell;
-    font-family: Snell Roundhand, cursive;
+    font-family: 'Trebuchet MS';
     box-shadow: 0.1rem 0.1rem 0.3rem 0.01rem var(--shadow-color);
     padding: 1.6rem;
     width: 60%;

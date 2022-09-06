@@ -245,9 +245,39 @@ select {
 }
 
 #exhibition-cards {
+    position: relative;
+    height: 70%;
     margin-top: 2rem;
     align-items: center;
     justify-content: center;
+}
+
+#footer {
+    bottom: 0%;
+}
+
+#connections {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    bottom: 0%;
+    justify-content: center;
+    text-align: center;
+    margin: 2rem;
+
+}
+
+#connections a {
+    margin: 1rem;
+    text-decoration: none;
+    font-family: 'Trebuchet MS';
+    font-size: 1.5rem;
+    color: azure;
+    transition: 300ms;
+}
+
+#connections a:hover { 
+    text-shadow: 0 0 0.4rem var(--generic-blue); 
 }
 
 #firework-control-panel {

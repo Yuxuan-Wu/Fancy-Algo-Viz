@@ -3,7 +3,7 @@
  * =============
  */
 import { navBar, mainExhibition, graphAlgoControlPanel, startIcon, destinationIcon, graphAlgoViz_tutorial_dialog_template } from "./main.js";
-import { sleep } from "./auxiliary.js";
+import { sleep, random, randomPickFromArray } from "./auxiliary.js";
 
 /**
  * Variable declaration and initialization
@@ -15,6 +15,7 @@ const findPathBtn = document.querySelector("#graph-algo-find-path");
 const createWallBtn = document.querySelector("#graph-algo-create-wall");
 const algoSelectMenu = document.querySelector("#graph-algo-menu");
 const pathfindingSpeedMenu = document.querySelector("#pathfinding-speed-menu");
+const generateMazeBtn = document.querySelector("#graph-algo-generate-maze");
 const resetGridBtn = document.querySelector("#graph-algo-reset");
 const tutorialNLegendsBtn = document.querySelector("#graph-algo-tutorial");
 const pathfindintInProgressBanner = document.querySelector("#pathfinding-in-progress-banner");
@@ -168,6 +169,15 @@ export function populateGrid() {
     gridBoard.style.setProperty("--rows", rows);
     gridBoard.style.setProperty("--cols", cols);
 
+    generateGridBoxes();
+
+    let startBox = boxes[Math.floor(rows / 2)][Math.floor(cols / 3)];
+    let finishBox = boxes[Math.floor(rows / 2)][Math.floor((cols * 2) / 3)];
+    initializeStartNFinish(startBox, finishBox);
+}
+
+function generateGridBoxes() {
+    boxes = [];
     let boxGroup = [];
 
     for (let i = 0; i < rows; i++) {
@@ -201,13 +211,9 @@ export function populateGrid() {
         boxes.push(boxGroup);
         boxGroup = [];
     }
-
-    let startBox = boxes[Math.floor(rows / 2)][Math.floor(cols / 3)];
-    let finishBox = boxes[Math.floor(rows / 2)][Math.floor((cols * 2) / 3)];
-    initializeStartFinish(startBox, finishBox);
 }
 
-function initializeStartFinish(start, finish) {
+function initializeStartNFinish(start, finish) {
     start.appendChild(startIcon);
     start.setAttribute("value", startIcon.dataset.value);
     start.style.backgroundColor = startIcon.dataset.color;
@@ -404,4 +410,34 @@ function isValidPath(id, row, col) {
     }
 
     return id;
+}
+
+generateMazeBtn.addEventListener("click", function () {
+    generateRandomMaze();
+});
+
+async function generateRandomMaze() {
+    //reset the current grid
+    gridBoard.innerHTML = "";
+    generateGridBoxes();
+
+    let unmarkedBoxes = [];
+    for (var i = 0; i < boxes.length; i++) {
+        for (var j = 0; j < boxes[i].length; j++) {
+            if (random(0, 9) <= 2) {
+                //randomly mark 30% of the boxes to be walls
+                setAsWall(boxes[i][j]);
+            }
+            else {
+                //unmarked boxes are put into a list
+                unmarkedBoxes.push(boxes[i][j]);
+            }
+        }
+        await sleep(pathfindingSpeedMenu.value);
+    }
+      
+    //pick the start and finish from unmarkedBoxes
+    let start = randomPickFromArray(unmarkedBoxes.slice(0, unmarkedBoxes.length / 2));
+    let finish = randomPickFromArray(unmarkedBoxes.slice(unmarkedBoxes.length / 2, unmarkedBoxes.length));
+    initializeStartNFinish(start, finish);
 }

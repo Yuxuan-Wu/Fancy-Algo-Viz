@@ -17,6 +17,10 @@ export function randomRGB() {
     return "#" + random(0, 16777215).toString(16);
 }
 
+export function randomPickFromArray(arr) {
+    return arr[random(0, arr.length)];
+}
+
 export function getAngle(x1, y1, x2, y2) {
     return Math.atan2(y2 - y1, x2 - x1);
 }
